@@ -25,6 +25,7 @@ namespace Storage
         public MainWindow()
         {
             //InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
     }
 }

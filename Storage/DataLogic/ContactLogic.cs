@@ -20,5 +20,16 @@ namespace Storage.DataLogic
             }
             return ContactList;
         }
+        public static void delContact(Contact contact)
+        {
+            storageDataContext.Contact.DeleteOnSubmit(contact);
+            storageDataContext.SubmitChanges();
+        }
+        public static void addContact(Contact contact)
+        {
+            storageDataContext.Contact.InsertOnSubmit(contact);
+            storageDataContext.SubmitChanges();
+        }
+
     }
 }

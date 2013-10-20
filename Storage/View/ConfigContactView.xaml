@@ -9,7 +9,7 @@
         <StackPanel x:Name="mainPanel" Margin="0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="addBtn" Content="增加" Click="addBtn_Click"/>
-                <Button x:Name="delBtn" Content="删除"/>
+                <Button x:Name="delBtn" Content="删除" Click="delBtn_Click"/>
                 <Button x:Name="modBtn" Content="修改"/>
             </StackPanel>
             <DataGrid x:Name="contactDataGrid" AutoGenerateColumns="False" ItemsSource="{Binding Path=ContactList}" CanUserAddRows="False" IsReadOnly="True">

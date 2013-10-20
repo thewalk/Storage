@@ -28,6 +28,25 @@ namespace Storage.ViewModel
         public ContactViewModel()
         {
             ContactList = ContactLogic.getAllContact();
+            ContactList.CollectionChanged += ContactList_CollectionChanged;
+        }
+
+        void ContactList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null && e.OldItems.Count != 0)
+            {
+                foreach (Contact oldContact in e.OldItems)
+                {
+                    ContactLogic.delContact(oldContact);
+                }
+            }
+            if (e.NewItems != null && e.NewItems.Count != 0)
+            {
+                foreach (Contact newContact in e.NewItems)
+                {
+                    ContactLogic.addContact(newContact);
+                }
+            }
         }
 
         #region INotifyPropertyChanged Members
