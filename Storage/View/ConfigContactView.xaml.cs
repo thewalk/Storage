@@ -29,7 +29,15 @@ namespace Storage.View
             InitializeComponent();
             this.ViewModel = new ContactViewModel();
             this.contactDataGrid.RowEditEnding += contactDataGrid_RowEditEnding;
+            contactIDList2BeModified = new List<int>();
+            this.contactDataGrid.LoadingRow += contactDataGrid_LoadingRow;
         }
+
+        void contactDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = e.Row.GetIndex() + 1;
+        }
+
         public ContactViewModel ViewModel
         {
             get
@@ -42,20 +50,19 @@ namespace Storage.View
             }
         }
 
+        private List<int> contactIDList2BeModified;
+        void contactDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            Contact contact = e.Row.Item as Contact;
+            contactIDList2BeModified.Add(contact.ID);
+        }
+
         private void addBtn_Click(object sender, RoutedEventArgs e)
         {
             ModernDialog addWindow = getAddContactWindow();
             addWindow.Show();
         }
 
-        void contactDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            //this.contactDataGrid.CanUserAddRows = false;
-            if (e.Row.ToString() == null)
-            {
-                MessageBox.Show("请输入姓名");
-            }
-        }
         ModernDialog getAddContactWindow()
         {
             Grid grid = new Grid();
@@ -220,10 +227,37 @@ namespace Storage.View
                 foreach (Contact contact in contactDataGrid.SelectedItems)
                 {
                     contactList.Add(contact);
-                    msg += "   " + contact.Name +"   \n";
+                    msg += "\t" + contact.Name +"\n";
                 }
-                ModernDialog.ShowMessage(msg, "", MessageBoxButton.OKCancel);
+                if (ModernDialog.ShowMessage(msg, "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    for (int i = 0; i < contactList.Count; i++)
+                    {
+                        this.ViewModel.ContactList.Remove(contactList[i]);
+                    }
+                }
 
+            }
+        }
+
+        private void modBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.modBtn.Content.Equals("修改"))
+            {
+                this.modBtn.Content = "修改中";
+                this.contactDataGrid.IsReadOnly = false;
+                this.modBtn.Background = Brushes.BlueViolet;
+                contactIDList2BeModified.Clear();
+            }
+            else
+            {
+                this.modBtn.Content = "修改";
+                this.contactDataGrid.IsReadOnly = true;
+                this.modBtn.Background = null;
+                foreach (int ID in contactIDList2BeModified)
+                {
+                    ViewModel.ContactUpd();
+                }
             }
         }
     }

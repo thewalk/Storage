@@ -30,6 +30,9 @@ namespace Storage.DataLogic
             storageDataContext.Contact.InsertOnSubmit(contact);
             storageDataContext.SubmitChanges();
         }
-
+        public static void updContact()
+        {
+            storageDataContext.SubmitChanges();
+        }
     }
 }

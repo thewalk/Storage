@@ -437,6 +437,8 @@ namespace Storage.Model
 		
 		private System.Nullable<double> _Size;
 		
+		private string _Note;
+		
 		private EntitySet<CurrentPort> _CurrentPort;
 		
 		private EntitySet<Export> _Export;
@@ -455,6 +457,8 @@ namespace Storage.Model
     partial void OnNumberChanged();
     partial void OnSizeChanging(System.Nullable<double> value);
     partial void OnSizeChanged();
+    partial void OnNoteChanging(string value);
+    partial void OnNoteChanged();
     #endregion
 		
 		public Pit()
@@ -541,6 +545,26 @@ namespace Storage.Model
 					this._Size = value;
 					this.SendPropertyChanged("Size");
 					this.OnSizeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Note", DbType="NVarChar(50)")]
+		public string Note
+		{
+			get
+			{
+				return this._Note;
+			}
+			set
+			{
+				if ((this._Note != value))
+				{
+					this.OnNoteChanging(value);
+					this.SendPropertyChanging();
+					this._Note = value;
+					this.SendPropertyChanged("Note");
+					this.OnNoteChanged();
 				}
 			}
 		}
@@ -1305,6 +1329,8 @@ namespace Storage.Model
 		
 		private System.Nullable<int> _KindID;
 		
+		private string _Note;
+		
 		private EntityRef<Batch> _Batch;
 		
 		private EntityRef<Contact> _Contact;
@@ -1331,6 +1357,8 @@ namespace Storage.Model
     partial void OnPitIDChanged();
     partial void OnKindIDChanging(System.Nullable<int> value);
     partial void OnKindIDChanged();
+    partial void OnNoteChanging(string value);
+    partial void OnNoteChanged();
     #endregion
 		
 		public Export()
@@ -1494,6 +1522,26 @@ namespace Storage.Model
 					this._KindID = value;
 					this.SendPropertyChanged("KindID");
 					this.OnKindIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Note", DbType="NVarChar(50)")]
+		public string Note
+		{
+			get
+			{
+				return this._Note;
+			}
+			set
+			{
+				if ((this._Note != value))
+				{
+					this.OnNoteChanging(value);
+					this.SendPropertyChanging();
+					this._Note = value;
+					this.SendPropertyChanged("Note");
+					this.OnNoteChanged();
 				}
 			}
 		}
@@ -1675,6 +1723,8 @@ namespace Storage.Model
 		
 		private System.Nullable<int> _KindID;
 		
+		private string _Note;
+		
 		private EntityRef<Batch> _Batch;
 		
 		private EntityRef<Contact> _Contact;
@@ -1701,6 +1751,8 @@ namespace Storage.Model
     partial void OnPitIDChanged();
     partial void OnKindIDChanging(System.Nullable<int> value);
     partial void OnKindIDChanged();
+    partial void OnNoteChanging(string value);
+    partial void OnNoteChanged();
     #endregion
 		
 		public Import()
@@ -1864,6 +1916,26 @@ namespace Storage.Model
 					this._KindID = value;
 					this.SendPropertyChanged("KindID");
 					this.OnKindIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Note", DbType="NVarChar(50)")]
+		public string Note
+		{
+			get
+			{
+				return this._Note;
+			}
+			set
+			{
+				if ((this._Note != value))
+				{
+					this.OnNoteChanging(value);
+					this.SendPropertyChanging();
+					this._Note = value;
+					this.SendPropertyChanged("Note");
+					this.OnNoteChanged();
 				}
 			}
 		}
@@ -2035,6 +2107,8 @@ namespace Storage.Model
 		
 		private string _Name;
 		
+		private string _Note;
+		
 		private EntitySet<CurrentPort> _CurrentPort;
 		
 		private EntitySet<Export> _Export;
@@ -2049,6 +2123,8 @@ namespace Storage.Model
     partial void OnIDChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
+    partial void OnNoteChanging(string value);
+    partial void OnNoteChanged();
     #endregion
 		
 		public Kind()
@@ -2095,6 +2171,26 @@ namespace Storage.Model
 					this._Name = value;
 					this.SendPropertyChanged("Name");
 					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Note", DbType="NVarChar(50)")]
+		public string Note
+		{
+			get
+			{
+				return this._Note;
+			}
+			set
+			{
+				if ((this._Note != value))
+				{
+					this.OnNoteChanging(value);
+					this.SendPropertyChanging();
+					this._Note = value;
+					this.SendPropertyChanged("Note");
+					this.OnNoteChanged();
 				}
 			}
 		}

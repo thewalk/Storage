@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Storage.View
 {
     /// <summary>
-    /// AddContactView.xaml 的交互逻辑
+    /// ConfigKindView.xaml 的交互逻辑
     /// </summary>
-    public partial class AddContactView : Page
+    public partial class ConfigKindView : Page
     {
-        public AddContactView()
+        public ConfigKindView()
         {
             InitializeComponent();
         }

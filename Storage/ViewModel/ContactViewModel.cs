@@ -48,6 +48,10 @@ namespace Storage.ViewModel
                 }
             }
         }
+        public void ContactUpd()
+        {
+            ContactLogic.updContact();
+        }
 
         #region INotifyPropertyChanged Members
 

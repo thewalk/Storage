@@ -1,0 +1,11 @@
+Cancel=取消
+Close=关闭
+NavigationFailed=导航失败
+NavigationFailedFrameNotFound=不能导航到 {0}，找不到任何 ModernFrame 目标 '{1}'
+NavigationFailedSourceNotSpecified=不能导航到 {0}，未指定源
+No=否
+ok=确定
+UIThreadRequired=操作需要UI线程
+UnexpectedToken=意外的令牌
+UnknownTokenType=未知令牌类型
+Yes=是

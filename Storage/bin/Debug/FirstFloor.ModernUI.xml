@@ -336,7 +336,7 @@
               Looks up a localized string similar to no.
             </summary>
         </member>
-        <member name="P:FirstFloor.ModernUI.Resources.Ok" value="是">
+        <member name="P:FirstFloor.ModernUI.Resources.Ok">
             <summary>
               Looks up a localized string similar to ok.
             </summary>

@@ -19,6 +19,7 @@
       <Column Name="Name" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
       <Column Name="Number" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Size" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Note" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="Pit_CurrentPort" Member="CurrentPort" ThisKey="ID" OtherKey="PitID" Type="CurrentPort" />
       <Association Name="Pit_Export" Member="Export" ThisKey="ID" OtherKey="PitID" Type="Export" />
       <Association Name="Pit_Import" Member="Import" ThisKey="ID" OtherKey="PitID" Type="Import" />
@@ -61,6 +62,7 @@
       <Column Name="BatchID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="PitID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="KindID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Note" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="Batch_Export" Member="Batch" ThisKey="BatchID" OtherKey="ID" Type="Batch" IsForeignKey="true" />
       <Association Name="Contact_Export" Member="Contact" ThisKey="ContactID" OtherKey="ID" Type="Contact" IsForeignKey="true" />
       <Association Name="Pit_Export" Member="Pit" ThisKey="PitID" OtherKey="ID" Type="Pit" IsForeignKey="true" />
@@ -76,6 +78,7 @@
       <Column Name="BatchID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="PitID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="KindID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Note" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="Batch_Import" Member="Batch" ThisKey="BatchID" OtherKey="ID" Type="Batch" IsForeignKey="true" />
       <Association Name="Contact_Import" Member="Contact" ThisKey="ContactID" OtherKey="ID" Type="Contact" IsForeignKey="true" />
       <Association Name="Pit_Import" Member="Pit" ThisKey="PitID" OtherKey="ID" Type="Pit" IsForeignKey="true" />
@@ -86,6 +89,7 @@
     <Type Name="Kind">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Note" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="Kind_CurrentPort" Member="CurrentPort" ThisKey="ID" OtherKey="KindID" Type="CurrentPort" />
       <Association Name="Kind_Export" Member="Export" ThisKey="ID" OtherKey="KindID" Type="Export" />
       <Association Name="Kind_Import" Member="Import" ThisKey="ID" OtherKey="KindID" Type="Import" />
