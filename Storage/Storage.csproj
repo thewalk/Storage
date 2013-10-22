@@ -63,14 +63,19 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataLogic\ContactLogic.cs" />
-    <Compile Include="ViewModel\ContactViewModel.cs" />
+    <Compile Include="DataLogic\KindLogic.cs" />
     <Compile Include="Model\Storage.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Storage.dbml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\ContactViewModel.cs" />
+    <Compile Include="ViewModel\KindViewModel.cs" />
     <Compile Include="View\ConfigContactView.xaml.cs">
       <DependentUpon>ConfigContactView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ConfigKindView.xaml.cs">
+      <DependentUpon>ConfigKindView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -85,6 +90,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\ConfigContactView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ConfigKindView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -103,24 +112,24 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Model\Storage.dbml.layout">
+      <DependentUpon>Storage.dbml</DependentUpon>
+    </None>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="Model\Storage.dbml.layout">
-      <DependentUpon>Storage.dbml</DependentUpon>
-    </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <AppDesigner Include="Properties\" />
     <None Include="Model\Storage.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>Storage.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

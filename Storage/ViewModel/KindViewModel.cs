@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Storage.DataLogic;
 using Storage.Model;
 
 namespace Storage.ViewModel
@@ -26,7 +27,26 @@ namespace Storage.ViewModel
         }
         public KindViewModel()
         {
-            
+            kindList = KindLogic.getAllKind();
+            kindList.CollectionChanged += kindList_CollectionChanged;
+        }
+
+        void kindList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null && e.OldItems.Count != 0)
+            {
+                foreach (Kind oldKind in e.OldItems)
+                {
+                    KindLogic.delKind(oldKind);
+                }
+            }
+            if (e.NewItems != null && e.NewItems.Count != 0)
+            {
+                foreach (Kind newKind in e.NewItems)
+                {
+                    KindLogic.addKind(newKind);
+                }
+            }
         }
         
         #region INotifyPropertyChanged Members

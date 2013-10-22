@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Storage.ViewModel;
 
 namespace Storage.View
 {
@@ -23,6 +24,19 @@ namespace Storage.View
         public ConfigKindView()
         {
             InitializeComponent();
+            ViewModel = new KindViewModel();
+            
+        }
+        public KindViewModel ViewModel
+        {
+            get
+            {
+                return this.DataContext as KindViewModel;
+            }
+            set
+            {
+                this.DataContext = value;
+            }
         }
     }
 }

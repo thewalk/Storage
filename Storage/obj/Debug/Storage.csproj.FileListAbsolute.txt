@@ -36,3 +36,5 @@ C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\Storage.csproj.GenerateR
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\Storage.exe
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\Storage.pdb
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\Storage.g.resources
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\ConfigKindView.baml
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\ConfigKindView.g.cs
