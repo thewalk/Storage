@@ -27,7 +27,7 @@ namespace Storage.ViewModel
         }
         public ContactViewModel()
         {
-            ContactList = ContactLogic.getAllContact();
+            ContactList = ConfigLogic.getAllContact();
             ContactList.CollectionChanged += ContactList_CollectionChanged;
         }
 
@@ -37,20 +37,20 @@ namespace Storage.ViewModel
             {
                 foreach (Contact oldContact in e.OldItems)
                 {
-                    ContactLogic.delContact(oldContact);
+                    ConfigLogic.delContact(oldContact);
                 }
             }
             if (e.NewItems != null && e.NewItems.Count != 0)
             {
                 foreach (Contact newContact in e.NewItems)
                 {
-                    ContactLogic.addContact(newContact);
+                    ConfigLogic.addContact(newContact);
                 }
             }
         }
         public void ContactUpd()
         {
-            ContactLogic.updContact();
+            ConfigLogic.updContact();
         }
 
         #region INotifyPropertyChanged Members

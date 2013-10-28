@@ -19,26 +19,26 @@ using Storage.ViewModel;
 namespace Storage.View
 {
     /// <summary>
-    /// ConfigKindView.xaml 的交互逻辑
+    /// ConfigPitView.xaml 的交互逻辑
     /// </summary>
-    public partial class ConfigKindView : Page
+    public partial class ConfigPitView : Page
     {
-        public ConfigKindView()
+        public ConfigPitView()
         {
             InitializeComponent();
-            ViewModel = new KindViewModel();
-            this.kindDataGrid.LoadingRow += kindDataGrid_LoadingRow;
+            this.ViewModel = new PitViewModel();
+            this.pitDataGrid.LoadingRow += pitDataGrid_LoadingRow;
         }
 
-        void kindDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        void pitDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = e.Row.GetIndex() + 1;
         }
-        public KindViewModel ViewModel
+        public PitViewModel ViewModel
         {
             get
             {
-                return this.DataContext as KindViewModel;
+                return this.DataContext as PitViewModel;
             }
             set
             {
@@ -47,10 +47,10 @@ namespace Storage.View
         }
         private void addBtn_Click(object sender, RoutedEventArgs e)
         {
-            ModernDialog addWindow = getAddKindWindow();
+            ModernDialog addWindow = getAddPitWindow();
             addWindow.Show();
         }
-        ModernDialog getAddKindWindow()
+        ModernDialog getAddPitWindow()
         {
             Grid grid = new Grid();
             grid.Width = 300;
@@ -60,12 +60,18 @@ namespace Storage.View
             grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
             grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
             grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+            grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+            grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
             grid.ColumnDefinitions.Add(new ColumnDefinition());
 
             Label nameLabel = new Label();
-            nameLabel.Content = "名称";
+            nameLabel.Content = "储窖名称";
             nameLabel.HorizontalAlignment = HorizontalAlignment.Left;
             nameLabel.Margin = new Thickness(30, 60, 0, 20);
+            Label sizeLabel = new Label();
+            sizeLabel.Content = "储窖吨位";
+            sizeLabel.HorizontalAlignment = HorizontalAlignment.Left;
+            sizeLabel.Margin = new Thickness(30, 0, 0, 20);
             Label noteLabel = new Label();
             noteLabel.Content = "备注";
             noteLabel.HorizontalAlignment = HorizontalAlignment.Left;
@@ -75,6 +81,12 @@ namespace Storage.View
             nameBox.Width = 160;
             nameBox.MaxWidth = 160;
             nameBox.Margin = new Thickness(30, 60, 0, 20);
+            //nameBox.Text = (this.pitDataGrid.Items.Count+1).ToString();
+            //nameBox.IsReadOnly = true;
+            TextBox sizeBox = new TextBox();
+            sizeBox.Width = 160;
+            sizeBox.MaxWidth = 160;
+            sizeBox.Margin = new Thickness(30, 0, 0, 20);
             TextBox noteBox = new TextBox();
             noteBox.Width = 160;
             noteBox.MaxWidth = 160;
@@ -89,6 +101,8 @@ namespace Storage.View
 
             grid.Children.Add(nameLabel);
             grid.Children.Add(nameBox);
+            grid.Children.Add(sizeLabel);
+            grid.Children.Add(sizeBox);
             grid.Children.Add(noteLabel);
             grid.Children.Add(noteBox);
 
@@ -96,9 +110,13 @@ namespace Storage.View
             nameLabel.SetValue(Grid.ColumnProperty, 0);
             nameBox.SetValue(Grid.RowProperty, 0);
             nameBox.SetValue(Grid.ColumnProperty, 1);
-            noteLabel.SetValue(Grid.RowProperty, 1);
+            sizeLabel.SetValue(Grid.RowProperty, 1);
+            sizeLabel.SetValue(Grid.ColumnProperty, 0);
+            sizeBox.SetValue(Grid.RowProperty, 1);
+            sizeBox.SetValue(Grid.ColumnProperty, 1);
+            noteLabel.SetValue(Grid.RowProperty, 2);
             noteLabel.SetValue(Grid.ColumnProperty, 0);
-            noteBox.SetValue(Grid.RowProperty, 1);
+            noteBox.SetValue(Grid.RowProperty, 2);
             noteBox.SetValue(Grid.ColumnProperty, 1);
 
             List<Button> dialogBtns = new List<Button>();
@@ -107,7 +125,7 @@ namespace Storage.View
             ModernDialog wnd = new ModernDialog
             {
                 Content = grid,
-                Title = "添加新品种",
+                Title = "添加新储窖",
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
                 ResizeMode = ResizeMode.NoResize,
                 Buttons = dialogBtns,
@@ -125,7 +143,7 @@ namespace Storage.View
         }
         void submitBtn_Click(object sender, RoutedEventArgs e)
         {
-            Kind newKind = new Kind();
+            Pit newPit = new Pit();
             ModernDialog dialog = (ModernDialog)Window.GetWindow(sender as Button);
             Grid grid = dialog.Content as Grid;
             List<string> info = new List<string>();
@@ -137,41 +155,43 @@ namespace Storage.View
                     info.Add(currentText.Text);
                 }
             }
-            newKind.Name = info[0];
-            newKind.Note = info[1];
-
-            if (info[0].Equals("") || info[0] == null)
+            try
             {
-                ModernDialog.ShowMessage("请填写新品种名称！", "", MessageBoxButton.OK);
+                newPit.Name = info[0];
+                newPit.Size = Convert.ToDouble(info[1]);
+                newPit.Note = info[2];
+            }
+            catch
+            {
+                ModernDialog.ShowMessage("请规范填写！", "", MessageBoxButton.OK);
                 return;
             }
 
-            this.ViewModel.KindList.Add(newKind);
-            ModernDialog.ShowMessage("添加新品种成功！", "", MessageBoxButton.OK);
+            this.ViewModel.PitList.Add(newPit);
+            ModernDialog.ShowMessage("添加新储窖成功！", "", MessageBoxButton.OK);
             dialog.Close();
         }
-
         private void delBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (kindDataGrid.SelectedItems == null || kindDataGrid.SelectedItems.Count == 0)
+            if (pitDataGrid.SelectedItems == null || pitDataGrid.SelectedItems.Count == 0)
             {
-                ModernDialog.ShowMessage("请先选择需要删除的品种！", "", MessageBoxButton.OK);
+                ModernDialog.ShowMessage("请先选择需要删除的储窖！", "", MessageBoxButton.OK);
             }
             else
             {
                 string msg = "";
-                msg += "确定删除以下品种？\n";
-                List<Kind> kindList = new List<Kind>();
-                foreach (Kind kind in kindDataGrid.SelectedItems)
+                msg += "确定删除以下储窖？\n";
+                List<Pit> pitList = new List<Pit>();
+                foreach (Pit pit in pitDataGrid.SelectedItems)
                 {
-                    kindList.Add(kind);
-                    msg += "\t" + kind.Name + "\n";
+                    pitList.Add(pit);
+                    msg += "\t" + pit.Name;
                 }
                 if (ModernDialog.ShowMessage(msg, "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                 {
-                    for (int i = 0; i < kindList.Count; i++)
+                    for (int i = 0; i < pitList.Count; i++)
                     {
-                        this.ViewModel.KindList.Remove(kindList[i]);
+                        this.ViewModel.PitList.Remove(pitList[i]);
                     }
                 }
 
@@ -183,15 +203,15 @@ namespace Storage.View
             if (this.modBtn.Content.Equals("修改"))
             {
                 this.modBtn.Content = "修改中";
-                this.kindDataGrid.IsReadOnly = false;
+                this.pitDataGrid.IsReadOnly = false;
                 this.modBtn.Background = Brushes.BlueViolet;
             }
             else
             {
                 this.modBtn.Content = "修改";
-                this.kindDataGrid.IsReadOnly = true;
+                this.pitDataGrid.IsReadOnly = true;
                 this.modBtn.Background = null;
-                ViewModel.KindUpd();
+                ViewModel.PitUpd();
             }
         }
     }

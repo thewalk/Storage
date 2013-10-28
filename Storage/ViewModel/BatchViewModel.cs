@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,50 +11,50 @@ using Storage.Model;
 
 namespace Storage.ViewModel
 {
-    public class KindViewModel : INotifyPropertyChanged
+    public class BatchViewModel:INotifyPropertyChanged
     {
-        private ObservableCollection<Kind> kindList;
-        public ObservableCollection<Kind> KindList
+        private ObservableCollection<Batch> batchList;
+        public ObservableCollection<Batch> BatchList
         {
             get
             {
-                return kindList;
+                return batchList;
             }
             set
             {
-                kindList = value;
-                OnPropertyChanged("kindList");
+                batchList = value;
+                OnPropertyChanged("batchList");
             }
         }
-        public KindViewModel()
+
+        public BatchViewModel()
         {
-            kindList = ConfigLogic.getAllKind();
-            kindList.CollectionChanged += kindList_CollectionChanged;
+            batchList = InOutLogic.getAllBatch();
+            batchList.CollectionChanged += batchList_CollectionChanged;
         }
 
-        void kindList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        void batchList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null && e.OldItems.Count != 0)
             {
-                foreach (Kind oldKind in e.OldItems)
+                foreach (Batch oldBatch in e.OldItems)
                 {
-                    ConfigLogic.delKind(oldKind);
+                    InOutLogic.delBatch(oldBatch);
                 }
             }
             if (e.NewItems != null && e.NewItems.Count != 0)
             {
-                foreach (Kind newKind in e.NewItems)
+                foreach (Batch newBatch in e.NewItems)
                 {
-                    ConfigLogic.addKind(newKind);
+                    InOutLogic.addBatch(newBatch);
                 }
             }
         }
 
-        public void KindUpd()
+        public void BatchUpd()
         {
-            ConfigLogic.updKind();
+            InOutLogic.updBatch();
         }
-        
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -68,6 +69,5 @@ namespace Storage.ViewModel
         }
 
         #endregion
-    
     }
 }

@@ -3,6 +3,7 @@
   <Table Name="dbo.Batch" Member="Batch">
     <Type Name="Batch">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Size" Type="System.Double" DbType="Float" CanBeNull="true" />
       <Column Name="InOut" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Note" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
@@ -15,9 +16,8 @@
   </Table>
   <Table Name="dbo.Pit" Member="Pit">
     <Type Name="Pit">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
-      <Column Name="Number" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Size" Type="System.Double" DbType="Float" CanBeNull="true" />
       <Column Name="Note" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="Pit_CurrentPort" Member="CurrentPort" ThisKey="ID" OtherKey="PitID" Type="CurrentPort" />

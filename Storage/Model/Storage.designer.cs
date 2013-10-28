@@ -148,6 +148,8 @@ namespace Storage.Model
 		
 		private int _ID;
 		
+		private string _Name;
+		
 		private System.Nullable<double> _Size;
 		
 		private System.Nullable<bool> _InOut;
@@ -170,6 +172,8 @@ namespace Storage.Model
     partial void OnCreated();
     partial void OnIDChanging(int value);
     partial void OnIDChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
     partial void OnSizeChanging(System.Nullable<double> value);
     partial void OnSizeChanged();
     partial void OnInOutChanging(System.Nullable<bool> value);
@@ -209,6 +213,26 @@ namespace Storage.Model
 					this._ID = value;
 					this.SendPropertyChanged("ID");
 					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(50)")]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
 				}
 			}
 		}
@@ -433,8 +457,6 @@ namespace Storage.Model
 		
 		private string _Name;
 		
-		private System.Nullable<int> _Number;
-		
 		private System.Nullable<double> _Size;
 		
 		private string _Note;
@@ -453,8 +475,6 @@ namespace Storage.Model
     partial void OnIDChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
-    partial void OnNumberChanging(System.Nullable<int> value);
-    partial void OnNumberChanged();
     partial void OnSizeChanging(System.Nullable<double> value);
     partial void OnSizeChanged();
     partial void OnNoteChanging(string value);
@@ -469,7 +489,7 @@ namespace Storage.Model
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int ID
 		{
 			get
@@ -489,7 +509,7 @@ namespace Storage.Model
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NChar(10)")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(50)")]
 		public string Name
 		{
 			get
@@ -505,26 +525,6 @@ namespace Storage.Model
 					this._Name = value;
 					this.SendPropertyChanged("Name");
 					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Number", DbType="Int")]
-		public System.Nullable<int> Number
-		{
-			get
-			{
-				return this._Number;
-			}
-			set
-			{
-				if ((this._Number != value))
-				{
-					this.OnNumberChanging(value);
-					this.SendPropertyChanging();
-					this._Number = value;
-					this.SendPropertyChanged("Number");
-					this.OnNumberChanged();
 				}
 			}
 		}

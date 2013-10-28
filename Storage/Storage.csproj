@@ -62,20 +62,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DataLogic\ContactLogic.cs" />
-    <Compile Include="DataLogic\KindLogic.cs" />
+    <Compile Include="Converter\InOutConverter.cs" />
+    <Compile Include="DataLogic\ConfigLogic.cs" />
+    <Compile Include="DataLogic\InOutLogic.cs" />
     <Compile Include="Model\Storage.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Storage.dbml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\BatchViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />
     <Compile Include="ViewModel\KindViewModel.cs" />
+    <Compile Include="ViewModel\PitViewModel.cs" />
     <Compile Include="View\ConfigContactView.xaml.cs">
       <DependentUpon>ConfigContactView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ConfigKindView.xaml.cs">
       <DependentUpon>ConfigKindView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ConfigPitView.xaml.cs">
+      <DependentUpon>ConfigPitView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\InOutBatchConfigView.xaml.cs">
+      <DependentUpon>InOutBatchConfigView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -94,6 +103,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ConfigKindView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ConfigPitView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\InOutBatchConfigView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

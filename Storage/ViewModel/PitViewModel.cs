@@ -10,50 +10,50 @@ using Storage.Model;
 
 namespace Storage.ViewModel
 {
-    public class KindViewModel : INotifyPropertyChanged
+    public  class PitViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<Kind> kindList;
-        public ObservableCollection<Kind> KindList
+        private ObservableCollection<Pit> pitList;
+        public ObservableCollection<Pit> PitList
         {
             get
             {
-                return kindList;
+                return pitList;
             }
             set
             {
-                kindList = value;
-                OnPropertyChanged("kindList");
+                pitList = value;
+                OnPropertyChanged("pitList");
             }
         }
-        public KindViewModel()
+        public PitViewModel()
         {
-            kindList = ConfigLogic.getAllKind();
-            kindList.CollectionChanged += kindList_CollectionChanged;
+            pitList = ConfigLogic.getAllPit();
+            pitList.CollectionChanged += pitList_CollectionChanged;
         }
 
-        void kindList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        void pitList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null && e.OldItems.Count != 0)
             {
-                foreach (Kind oldKind in e.OldItems)
+                foreach (Pit oldPit in e.OldItems)
                 {
-                    ConfigLogic.delKind(oldKind);
+                    ConfigLogic.delPit(oldPit);
                 }
             }
             if (e.NewItems != null && e.NewItems.Count != 0)
             {
-                foreach (Kind newKind in e.NewItems)
+                foreach (Pit newPit in e.NewItems)
                 {
-                    ConfigLogic.addKind(newKind);
+                    ConfigLogic.addPit(newPit);
                 }
             }
         }
 
-        public void KindUpd()
+        public void PitUpd()
         {
-            ConfigLogic.updKind();
+            ConfigLogic.updPit();
         }
-        
+
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;

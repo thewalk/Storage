@@ -28,8 +28,6 @@ namespace Storage.View
         {
             InitializeComponent();
             this.ViewModel = new ContactViewModel();
-            this.contactDataGrid.RowEditEnding += contactDataGrid_RowEditEnding;
-            contactIDList2BeModified = new List<int>();
             this.contactDataGrid.LoadingRow += contactDataGrid_LoadingRow;
         }
 
@@ -48,13 +46,6 @@ namespace Storage.View
             {
                 this.DataContext = value;
             }
-        }
-
-        private List<int> contactIDList2BeModified;
-        void contactDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            Contact contact = e.Row.Item as Contact;
-            contactIDList2BeModified.Add(contact.ID);
         }
 
         private void addBtn_Click(object sender, RoutedEventArgs e)
@@ -247,17 +238,13 @@ namespace Storage.View
                 this.modBtn.Content = "修改中";
                 this.contactDataGrid.IsReadOnly = false;
                 this.modBtn.Background = Brushes.BlueViolet;
-                contactIDList2BeModified.Clear();
             }
             else
             {
                 this.modBtn.Content = "修改";
                 this.contactDataGrid.IsReadOnly = true;
                 this.modBtn.Background = null;
-                foreach (int ID in contactIDList2BeModified)
-                {
-                    ViewModel.ContactUpd();
-                }
+                ViewModel.ContactUpd();
             }
         }
     }

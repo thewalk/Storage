@@ -38,3 +38,9 @@ C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\Storage.pdb
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\Storage.g.resources
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\ConfigKindView.baml
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\ConfigKindView.g.cs
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\ConfigPitView.baml
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\ConfigPitView.g.cs
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\InOutBatchConfigView.baml
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\InOutBatchConfigView.g.cs
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\Storage_MarkupCompile.lref
