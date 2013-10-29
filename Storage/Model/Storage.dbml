@@ -2,7 +2,7 @@
   <Connection Mode="AppSettings" ConnectionString="Data Source=GJY-PC\SQLEXPRESS;Initial Catalog=Storage;Integrated Security=True;Pooling=False" SettingsObjectName="Storage.Properties.Settings" SettingsPropertyName="StorageConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Batch" Member="Batch">
     <Type Name="Batch">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Size" Type="System.Double" DbType="Float" CanBeNull="true" />
       <Column Name="InOut" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
@@ -11,7 +11,7 @@
       <Association Name="Batch_CurrentPort" Member="CurrentPort" ThisKey="ID" OtherKey="BatchID" Type="CurrentPort" />
       <Association Name="Batch_Export" Member="Export" ThisKey="ID" OtherKey="BatchID" Type="Export" />
       <Association Name="Batch_Import" Member="Import" ThisKey="ID" OtherKey="BatchID" Type="Import" />
-      <Association Name="Contact_Batch" Member="Contact" ThisKey="ID" OtherKey="ID" Type="Contact" IsForeignKey="true" />
+      <Association Name="Contact_Batch" Member="Contact" ThisKey="ContactID" OtherKey="ID" Type="Contact" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Pit" Member="Pit">
@@ -33,7 +33,7 @@
       <Column Name="Phone" Type="System.String" DbType="NChar(11)" CanBeNull="true" />
       <Column Name="Address" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Note" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Association Name="Contact_Batch" Member="Batch" ThisKey="ID" OtherKey="ID" Type="Batch" Cardinality="One" />
+      <Association Name="Contact_Batch" Member="Batch" ThisKey="ID" OtherKey="ContactID" Type="Batch" />
       <Association Name="Contact_CurrentPort" Member="CurrentPort" ThisKey="ID" OtherKey="ContactID" Type="CurrentPort" />
       <Association Name="Contact_Export" Member="Export" ThisKey="ID" OtherKey="ContactID" Type="Export" />
       <Association Name="Contact_Import" Member="Import" ThisKey="ID" OtherKey="ContactID" Type="Import" />
@@ -41,7 +41,7 @@
   </Table>
   <Table Name="dbo.CurrentPort" Member="CurrentPort">
     <Type Name="CurrentPort">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="ContactID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="BatchID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="PitID" Type="System.Int32" DbType="Int" CanBeNull="true" />
@@ -55,7 +55,7 @@
   </Table>
   <Table Name="dbo.Export" Member="Export">
     <Type Name="Export">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Size" Type="System.Double" DbType="Float" CanBeNull="true" />
       <Column Name="Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="ContactID" Type="System.Int32" DbType="Int" CanBeNull="true" />
@@ -71,7 +71,7 @@
   </Table>
   <Table Name="dbo.Import" Member="Import">
     <Type Name="Import">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Size" Type="System.Double" DbType="Float" CanBeNull="true" />
       <Column Name="Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="ContactID" Type="System.Int32" DbType="Int" CanBeNull="true" />
@@ -87,7 +87,7 @@
   </Table>
   <Table Name="dbo.Kind" Member="Kind">
     <Type Name="Kind">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Note" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="Kind_CurrentPort" Member="CurrentPort" ThisKey="ID" OtherKey="KindID" Type="CurrentPort" />

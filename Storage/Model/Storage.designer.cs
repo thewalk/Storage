@@ -193,7 +193,7 @@ namespace Storage.Model
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int ID
 		{
 			get
@@ -204,10 +204,6 @@ namespace Storage.Model
 			{
 				if ((this._ID != value))
 				{
-					if (this._Contact.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
 					this.OnIDChanging(value);
 					this.SendPropertyChanging();
 					this._ID = value;
@@ -308,6 +304,10 @@ namespace Storage.Model
 			{
 				if ((this._ContactID != value))
 				{
+					if (this._Contact.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnContactIDChanging(value);
 					this.SendPropertyChanging();
 					this._ContactID = value;
@@ -356,7 +356,7 @@ namespace Storage.Model
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Contact_Batch", Storage="_Contact", ThisKey="ID", OtherKey="ID", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Contact_Batch", Storage="_Contact", ThisKey="ContactID", OtherKey="ID", IsForeignKey=true)]
 		public Contact Contact
 		{
 			get
@@ -373,17 +373,17 @@ namespace Storage.Model
 					if ((previousValue != null))
 					{
 						this._Contact.Entity = null;
-						previousValue.Batch = null;
+						previousValue.Batch.Remove(this);
 					}
 					this._Contact.Entity = value;
 					if ((value != null))
 					{
-						value.Batch = this;
-						this._ID = value.ID;
+						value.Batch.Add(this);
+						this._ContactID = value.ID;
 					}
 					else
 					{
-						this._ID = default(int);
+						this._ContactID = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("Contact");
 				}
@@ -683,7 +683,7 @@ namespace Storage.Model
 		
 		private string _Note;
 		
-		private EntityRef<Batch> _Batch;
+		private EntitySet<Batch> _Batch;
 		
 		private EntitySet<CurrentPort> _CurrentPort;
 		
@@ -711,7 +711,7 @@ namespace Storage.Model
 		
 		public Contact()
 		{
-			this._Batch = default(EntityRef<Batch>);
+			this._Batch = new EntitySet<Batch>(new Action<Batch>(this.attach_Batch), new Action<Batch>(this.detach_Batch));
 			this._CurrentPort = new EntitySet<CurrentPort>(new Action<CurrentPort>(this.attach_CurrentPort), new Action<CurrentPort>(this.detach_CurrentPort));
 			this._Export = new EntitySet<Export>(new Action<Export>(this.attach_Export), new Action<Export>(this.detach_Export));
 			this._Import = new EntitySet<Import>(new Action<Import>(this.attach_Import), new Action<Import>(this.detach_Import));
@@ -838,32 +838,16 @@ namespace Storage.Model
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Contact_Batch", Storage="_Batch", ThisKey="ID", OtherKey="ID", IsUnique=true, IsForeignKey=false)]
-		public Batch Batch
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Contact_Batch", Storage="_Batch", ThisKey="ID", OtherKey="ContactID")]
+		public EntitySet<Batch> Batch
 		{
 			get
 			{
-				return this._Batch.Entity;
+				return this._Batch;
 			}
 			set
 			{
-				Batch previousValue = this._Batch.Entity;
-				if (((previousValue != value) 
-							|| (this._Batch.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Batch.Entity = null;
-						previousValue.Contact = null;
-					}
-					this._Batch.Entity = value;
-					if ((value != null))
-					{
-						value.Contact = this;
-					}
-					this.SendPropertyChanged("Batch");
-				}
+				this._Batch.Assign(value);
 			}
 		}
 		
@@ -924,6 +908,18 @@ namespace Storage.Model
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_Batch(Batch entity)
+		{
+			this.SendPropertyChanging();
+			entity.Contact = this;
+		}
+		
+		private void detach_Batch(Batch entity)
+		{
+			this.SendPropertyChanging();
+			entity.Contact = null;
 		}
 		
 		private void attach_CurrentPort(CurrentPort entity)
@@ -1016,7 +1012,7 @@ namespace Storage.Model
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int ID
 		{
 			get
@@ -1370,7 +1366,7 @@ namespace Storage.Model
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int ID
 		{
 			get
@@ -1764,7 +1760,7 @@ namespace Storage.Model
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int ID
 		{
 			get
@@ -2135,7 +2131,7 @@ namespace Storage.Model
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int ID
 		{
 			get

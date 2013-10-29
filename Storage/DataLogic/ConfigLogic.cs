@@ -9,7 +9,7 @@ namespace Storage.DataLogic
 {
     public static class ConfigLogic
     {
-        static StorageDataContext storageDataContext = new StorageDataContext();
+        static StorageDataContext storageDataContext = MyDataContext.storageDataContext;
  
         #region Operation On Contact
         public static ObservableCollection<Contact> getAllContact()
@@ -35,6 +35,10 @@ namespace Storage.DataLogic
         public static void updContact()
         {
             storageDataContext.SubmitChanges();
+        }
+        public static Contact getContactByID(int ID)
+        {
+            return storageDataContext.Contact.SingleOrDefault(c => c.ID == ID);
         }
 
         #endregion

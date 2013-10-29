@@ -117,7 +117,7 @@ namespace Storage.View
             contactBox.Width = 160;
             contactBox.MaxWidth = 160;
             contactBox.Margin = new Thickness(30 ,0 ,0 ,20);
-
+            contactBox.SelectionChanged += contactBox_SelectionChanged;
             foreach (Contact contact in ConfigLogic.getAllContact())
             {
                 contactBox.Items.Add(contact.ID+":"+contact.Name);
@@ -172,6 +172,14 @@ namespace Storage.View
             wnd.Height = 300;
             wnd.Width = 300;
             return wnd;
+        }
+
+        void contactBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox contactBox = e.Source as ComboBox;
+            string text = contactBox.SelectedItem.ToString();
+            Contact contact = ConfigLogic.getContactByID(Convert.ToInt32(text.Substring(0, text.IndexOf(':'))));
+            contactBox.ToolTip = "姓名：\t" + contact.Name + "\n身份证号：" + contact.Identity + "\n电话：\t" + contact.Phone + "\n地址：\t" + contact.Address + "\n备注：\t" + contact.Note;
         }
         void cancelBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -269,6 +277,7 @@ namespace Storage.View
                 this.batchDataGrid.IsReadOnly = false;
                 this.batchDataGrid.Columns[1].IsReadOnly = true;
                 this.batchDataGrid.Columns[3].IsReadOnly = true;
+                this.batchDataGrid.PreparingCellForEdit += batchDataGrid_PreparingCellForEdit;
                 this.modBtn.Background = Brushes.BlueViolet;
             }
             else
@@ -276,8 +285,61 @@ namespace Storage.View
                 this.modBtn.Content = "修改";
                 this.batchDataGrid.IsReadOnly = true;
                 this.modBtn.Background = null;
+                this.batchDataGrid.PreparingCellForEdit -= batchDataGrid_PreparingCellForEdit;
                 ViewModel.BatchUpd();
             }
+        }
+
+        void batchDataGrid_PreparingCellForEdit(object sender, DataGridPreparingCellForEditEventArgs e)
+        {
+            ConfigContactView contactView = new ConfigContactView();
+            contactView.addBtn.Visibility = Visibility.Hidden;
+            contactView.delBtn.Visibility = Visibility.Hidden;
+            contactView.modBtn.Visibility = Visibility.Hidden;
+
+            if (e.Column.Equals(this.batchDataGrid.Columns[4]))
+            {
+                List<Button> dialogBtn = new List<Button>();
+                Button submitBtn = new Button();
+                submitBtn.Content = "确定";
+                submitBtn.Click += contactSelect_Click;
+                Button cancelBtn = new Button();
+                cancelBtn.Content = "取消";
+                cancelBtn.Click += contactCancel_Click;
+                dialogBtn.Add(submitBtn);
+                dialogBtn.Add(cancelBtn);
+                ModernDialog dialog = new ModernDialog
+                {
+                    Title = "选择联系人",
+                    Content = contactView,
+                    ResizeMode = ResizeMode.NoResize,
+                    Buttons = dialogBtn
+                };
+                dialog.Show();
+            }
+        }
+
+        private void contactCancel_Click(object sender, RoutedEventArgs e)
+        {
+            Button cancelBtn = sender as Button;
+            Window.GetWindow(cancelBtn).Close();
+            batchDataGrid.Columns[4].IsReadOnly = true;
+            batchDataGrid.Columns[4].IsReadOnly = false;
+        }
+
+        private void contactSelect_Click(object sender, RoutedEventArgs e)
+        {
+            Button submitBtn = sender as Button;
+            ConfigContactView content =  Window.GetWindow(submitBtn).Content as ConfigContactView;
+            if (content.contactDataGrid.SelectedItem == null)
+            {
+                ModernDialog.ShowMessage("请选择一个联系人","",MessageBoxButton.OK);
+            }
+            Contact contact = content.contactDataGrid.SelectedItem as Contact;
+            (batchDataGrid.SelectedItem as Batch).Contact = contact;
+            Window.GetWindow(submitBtn).Close();
+            batchDataGrid.Columns[4].IsReadOnly = true;
+            batchDataGrid.Columns[4].IsReadOnly = false;
         }
     }
 }

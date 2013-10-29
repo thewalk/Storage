@@ -64,6 +64,7 @@
     </ApplicationDefinition>
     <Compile Include="Converter\InOutConverter.cs" />
     <Compile Include="DataLogic\ConfigLogic.cs" />
+    <Compile Include="DataLogic\MyDataContext.cs" />
     <Compile Include="DataLogic\InOutLogic.cs" />
     <Compile Include="Model\Storage.designer.cs">
       <AutoGen>True</AutoGen>
