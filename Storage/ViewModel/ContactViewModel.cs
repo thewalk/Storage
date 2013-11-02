@@ -30,6 +30,11 @@ namespace Storage.ViewModel
             ContactList = ConfigLogic.getAllContact();
             ContactList.CollectionChanged += ContactList_CollectionChanged;
         }
+        public ContactViewModel(ObservableCollection<Contact> list)
+        {
+            ContactList = list;
+            ContactList.CollectionChanged += ContactList_CollectionChanged;
+        }
 
         void ContactList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {

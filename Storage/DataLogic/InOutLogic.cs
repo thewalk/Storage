@@ -24,6 +24,16 @@ namespace Storage.DataLogic
             }
             return batchList;
         }
+        public static ObservableCollection<Batch> getImportBatch()
+        {
+            var result = from batch in storageDataContext.Batch where batch.InOut==true select batch;
+            ObservableCollection<Batch> batchList = new ObservableCollection<Batch>();
+            foreach (Batch batch in result)
+            {
+                batchList.Add(batch);
+            }
+            return batchList;
+        }
         public static void delBatch(Batch batch)
         {
         }
@@ -39,5 +49,36 @@ namespace Storage.DataLogic
         }
         #endregion
 
+
+        #region Operation On Import
+        public static ObservableCollection<Import> getAllImport()
+        {
+            var result = from import in storageDataContext.Import select import;
+            ObservableCollection<Import> importList = new ObservableCollection<Import>();
+            foreach (Import import in result)
+            {
+                importList.Add(import);
+            }
+            return importList;
+        }
+        public static void delImport(Import import)
+        {
+            storageDataContext.Import.DeleteOnSubmit(import);
+            storageDataContext.SubmitChanges();
+        }
+        public static void addImport(Import import)
+        {
+            import.Contact = storageDataContext.Contact.Single(contact => contact.ID == import.ContactID);
+            import.Batch = storageDataContext.Batch.Single(batch => batch.ID == import.BatchID);
+            import.Kind = storageDataContext.Kind.Single(kind => kind.ID == import.KindID);
+            import.Pit = storageDataContext.Pit.Single(pit => pit.ID == import.PitID);
+            storageDataContext.Import.InsertOnSubmit(import);
+            storageDataContext.SubmitChanges();
+        }
+        public static void updImport()
+        {
+            storageDataContext.SubmitChanges();
+        }
+        #endregion
     }
 }

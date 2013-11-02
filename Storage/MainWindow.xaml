@@ -14,16 +14,16 @@
 
         <mui:LinkGroup x:Uid="mui:LinkGroup_2" DisplayName="仓库管理" >
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="批次管理"  Source="/View/InOutBatchConfigView.xaml"/>
-                <mui:Link x:Uid="mui:Link_4" DisplayName="入库管理" />
+                <mui:Link DisplayName="批次管理"  Source="/View/InOutView/InOutBatchConfigView.xaml"/>
+                <mui:Link x:Uid="mui:Link_4" DisplayName="入库管理" Source="/View/InOutView/InOutImportView.xaml"/>
                 <mui:Link x:Uid="mui:Link_5" DisplayName="出库管理" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
 
         <mui:LinkGroup x:Uid="mui:LinkGroup_3" DisplayName="配置管理" >
             <mui:LinkGroup.Links>
-                <mui:Link x:Uid="mui:Link_6" DisplayName="联系人管理"   Source="/View/ConfigContactView.xaml" />
-                <mui:Link x:Uid="mui:Link_7" DisplayName="储物品种管理"  Source="/View/ConfigKindView.xaml" />
+                <mui:Link x:Uid="mui:Link_6" DisplayName="联系人管理"   Source="/View/ConfigView/ConfigContactView.xaml" />
+                <mui:Link x:Uid="mui:Link_7" DisplayName="储物品种管理"  Source="/View/ConfigView/ConfigKindView.xaml" />
                 <mui:Link DisplayName="储窖管理"  Source="/View/ConfigPitView.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>

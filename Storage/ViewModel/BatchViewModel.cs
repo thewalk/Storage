@@ -29,10 +29,14 @@ namespace Storage.ViewModel
 
         public BatchViewModel()
         {
-            batchList = InOutLogic.getAllBatch();
-            batchList.CollectionChanged += batchList_CollectionChanged;
+            BatchList = InOutLogic.getAllBatch();
+            BatchList.CollectionChanged += batchList_CollectionChanged;
         }
-
+        public BatchViewModel(ObservableCollection<Batch> list)
+        {
+            BatchList = list;
+            BatchList.CollectionChanged += batchList_CollectionChanged;
+        }
         void batchList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null && e.OldItems.Count != 0)

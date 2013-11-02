@@ -27,8 +27,13 @@ namespace Storage.ViewModel
         }
         public PitViewModel()
         {
-            pitList = ConfigLogic.getAllPit();
-            pitList.CollectionChanged += pitList_CollectionChanged;
+            PitList = ConfigLogic.getAllPit();
+            PitList.CollectionChanged += pitList_CollectionChanged;
+        }
+        public PitViewModel(ObservableCollection<Pit> list)
+        {
+            PitList = list;
+            PitList.CollectionChanged += pitList_CollectionChanged;
         }
 
         void pitList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

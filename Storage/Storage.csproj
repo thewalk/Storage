@@ -73,19 +73,23 @@
     </Compile>
     <Compile Include="ViewModel\BatchViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />
+    <Compile Include="ViewModel\ImportViewModel.cs" />
     <Compile Include="ViewModel\KindViewModel.cs" />
     <Compile Include="ViewModel\PitViewModel.cs" />
-    <Compile Include="View\ConfigContactView.xaml.cs">
+    <Compile Include="View\ConfigView\ConfigContactView.xaml.cs">
       <DependentUpon>ConfigContactView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ConfigKindView.xaml.cs">
+    <Compile Include="View\ConfigView\ConfigKindView.xaml.cs">
       <DependentUpon>ConfigKindView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ConfigPitView.xaml.cs">
+    <Compile Include="View\ConfigView\ConfigPitView.xaml.cs">
       <DependentUpon>ConfigPitView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\InOutBatchConfigView.xaml.cs">
+    <Compile Include="View\InOutView\InOutBatchConfigView.xaml.cs">
       <DependentUpon>InOutBatchConfigView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\InOutView\InOutImportView.xaml.cs">
+      <DependentUpon>InOutImportView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -99,19 +103,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\ConfigContactView.xaml">
+    <Page Include="View\ConfigView\ConfigContactView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ConfigKindView.xaml">
+    <Page Include="View\ConfigView\ConfigKindView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ConfigPitView.xaml">
+    <Page Include="View\ConfigView\ConfigPitView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\InOutBatchConfigView.xaml">
+    <Page Include="View\InOutView\InOutBatchConfigView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\InOutView\InOutImportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

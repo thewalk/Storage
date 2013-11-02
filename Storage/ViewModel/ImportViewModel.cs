@@ -10,55 +10,58 @@ using Storage.Model;
 
 namespace Storage.ViewModel
 {
-    public class KindViewModel : INotifyPropertyChanged
+    public class ImportViewModel:INotifyPropertyChanged
     {
-        private ObservableCollection<Kind> kindList;
-        public ObservableCollection<Kind> KindList
+        private ObservableCollection<Import> importList = new ObservableCollection<Import>();
+        public ObservableCollection<Import> ImportList
         {
             get
             {
-                return kindList;
+                return importList;
             }
             set
             {
-                kindList = value;
-                OnPropertyChanged("kindList");
+                importList = value;
+                OnPropertyChanged("importList");
             }
         }
-        public KindViewModel()
+        public ImportViewModel()
         {
-            KindList = ConfigLogic.getAllKind();
-            KindList.CollectionChanged += kindList_CollectionChanged;
+            ImportList = InOutLogic.getAllImport();
+            ImportList.CollectionChanged += importList_CollectionChanged;
         }
-        public KindViewModel(ObservableCollection<Kind> list)
+        public ImportViewModel(ObservableCollection<Import> list)
         {
-            KindList = list;
-            KindList.CollectionChanged += kindList_CollectionChanged;
+            ImportList = list;
+            ImportList.CollectionChanged += importList_CollectionChanged;
         }
 
-        void kindList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        void importList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null && e.OldItems.Count != 0)
             {
-                foreach (Kind oldKind in e.OldItems)
+                foreach (Import oldImport in e.OldItems)
                 {
-                    ConfigLogic.delKind(oldKind);
+                    InOutLogic.delImport(oldImport);
                 }
             }
             if (e.NewItems != null && e.NewItems.Count != 0)
             {
-                foreach (Kind newKind in e.NewItems)
+                foreach (Import newImport in e.NewItems)
                 {
-                    ConfigLogic.addKind(newKind);
+                    InOutLogic.addImport(newImport);
                 }
             }
         }
 
-        public void KindUpd()
+        public void ImportUpd()
         {
-            ConfigLogic.updKind();
+            InOutLogic.updImport();
         }
-        
+
+
+
+
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -73,6 +76,5 @@ namespace Storage.ViewModel
         }
 
         #endregion
-    
     }
 }
