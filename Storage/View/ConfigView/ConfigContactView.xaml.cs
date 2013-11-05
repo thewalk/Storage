@@ -22,7 +22,7 @@ namespace Storage.View
     /// <summary>
     /// ConfigContactView.xaml 的交互逻辑
     /// </summary>
-    public partial class ConfigContactView : UserControl
+    public partial class ConfigContactView : Page
     {
         public ConfigContactView()
         {

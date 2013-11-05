@@ -3,11 +3,14 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:converter="clr-namespace:Storage.Converter"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
 	Title="InOutImportView">
-
-    <Grid>
+    <Page.Resources>
+        <converter:TimeConverter x:Key="timeConverter"></converter:TimeConverter>
+    </Page.Resources>
+        <Grid>
         <StackPanel x:Name="mainPanel" Margin="0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="addBtn" Content="增加" Click="addBtn_Click"/>
@@ -21,7 +24,7 @@
                     <DataGridTextColumn Header="储窖名称" Binding="{Binding Path=Pit.Name}"/>
                     <DataGridTextColumn Header="品种名称" Binding="{Binding Path=Kind.Name}"/>
                     <DataGridTextColumn Header="大小（吨）" Binding="{Binding Path=Size}"/>
-                    <DataGridTextColumn Header="入库时间" Binding="{Binding Path=Time}"/>
+                    <DataGridTextColumn Header="入库时间" Binding="{Binding Path=Time,Converter={StaticResource ResourceKey=timeConverter}}"/>
                     <DataGridTextColumn Header="备注" Binding="{Binding Path=Note}"/>
                 </DataGrid.Columns>
             </DataGrid>

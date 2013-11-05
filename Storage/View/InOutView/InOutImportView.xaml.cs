@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -36,6 +37,19 @@ namespace Storage.View
         void importDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = e.Row.GetIndex() + 1;
+            e.Row.MouseEnter += Row_MouseEnter;
+        }
+
+        void Row_MouseEnter(object sender, MouseEventArgs e)
+        {
+            DataGridRow row = e.Source as DataGridRow;
+            Import import = importDataGrid.Items[row.GetIndex()] as Import;
+            row.ToolTip = "联系人\n" + "姓名：\t" + import.Contact.Name + "\n身份证号：" + import.Contact.Identity + "\n电话：\t" +
+                import.Contact.Phone + "\n地址：\t" + import.Contact.Address + "\n备注：\t" + import.Contact.Note + "\n\n" +
+                "批次\n" + "名称：\t" + import.Batch.Name + "\n大小(吨):\t" + import.Batch.Size + "\n备注：\t" + import.Batch.Note + "\n\n" +
+                "储窖\n" + "名称：\t" + import.Pit.Name + "\n大小(吨):\t" + import.Pit.Size + "\n备注：\t" + import.Pit.Note + "\n\n" +
+                "品种\n" + "名称：\t" + import.Kind.Name + "\n备注：\t" + import.Kind.Note;
+
         }
         public ImportViewModel ViewModel
         {
@@ -532,9 +546,7 @@ namespace Storage.View
             {
                 this.modBtn.Content = "修改中";
                 this.importDataGrid.IsReadOnly = false;
-                this.importDataGrid.Columns[1].IsReadOnly = true;
-                this.importDataGrid.Columns[3].IsReadOnly = true;
-                //this.importDataGrid.PreparingCellForEdit += batchDataGrid_PreparingCellForEdit;
+                this.importDataGrid.PreparingCellForEdit += importDataGrid_PreparingCellForEdit;
                 this.modBtn.Background = Brushes.BlueViolet;
             }
             else
@@ -542,9 +554,113 @@ namespace Storage.View
                 this.modBtn.Content = "修改";
                 this.importDataGrid.IsReadOnly = true;
                 this.modBtn.Background = null;
-                //this.importDataGrid.PreparingCellForEdit -= batchDataGrid_PreparingCellForEdit;
+                this.importDataGrid.PreparingCellForEdit -= importDataGrid_PreparingCellForEdit;
                 ViewModel.ImportUpd();
             }
+        }
+
+        void importDataGrid_PreparingCellForEdit(object sender, DataGridPreparingCellForEditEventArgs e)
+        {
+            Page view;
+            string windowTitle="";
+            switch (e.Column.DisplayIndex)
+            {
+                case 0:
+                    ConfigContactView contactView = new ConfigContactView();
+                    contactView.addBtn.Visibility = Visibility.Hidden;
+                    contactView.modBtn.Visibility = Visibility.Hidden;
+                    contactView.delBtn.Visibility = Visibility.Hidden;
+                    windowTitle = "修改联系人";
+                    view = contactView as Page;
+                    break;
+                case 1:
+                    InOutBatchConfigView batchView = new InOutBatchConfigView();
+                    batchView.ViewModel = new BatchViewModel(InOutLogic.getImportBatch());
+                    batchView.addBtn.Visibility = Visibility.Hidden;
+                    batchView.modBtn.Visibility = Visibility.Hidden;
+                    batchView.delBtn.Visibility = Visibility.Hidden;
+                    windowTitle = "修改批次";
+                    view = batchView as Page;
+                    break;
+                case 2:
+                    
+                    ConfigPitView pitView = new ConfigPitView();
+                    pitView.addBtn.Visibility = Visibility.Hidden;
+                    pitView.modBtn.Visibility = Visibility.Hidden;
+                    pitView.delBtn.Visibility = Visibility.Hidden;
+                    windowTitle = "修改储窖";
+                    view = pitView as Page;
+                    break;
+                case 3:
+                    ConfigKindView kindView = new ConfigKindView();
+                    kindView.addBtn.Visibility = Visibility.Hidden;
+                    kindView.modBtn.Visibility = Visibility.Hidden;
+                    kindView.delBtn.Visibility = Visibility.Hidden;
+                    windowTitle = "修改品种";
+                    view = kindView as Page;
+                    break;
+                default:
+                    view = null;
+                    break;
+            }
+            if( view != null)
+            {
+                List<Button> btns = new List<Button>();
+                Button modifySubmitBtn = new Button();
+                modifySubmitBtn.Content = "确定";
+                btns.Add(modifySubmitBtn);
+                modifySubmitBtn.Click += modifySubmitBtn_Click;
+                Button modifyCancelBtn = new Button();
+                modifyCancelBtn.Content = "取消";
+                btns.Add(modifyCancelBtn);
+                modifyCancelBtn.Click += modifyCancelBtn_Click;
+                ModernDialog diglog = new ModernDialog()
+                {
+                    Content = view,
+                    Title = windowTitle,
+                    Buttons = btns,
+                };
+                diglog.Show();
+                importDataGrid.IsReadOnly = true;
+                importDataGrid.IsReadOnly = false;
+            }
+
+        }
+
+        void modifySubmitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Window window = Window.GetWindow(sender as Button);
+            string windowTitle = window.Title;
+            Import import = this.importDataGrid.SelectedItem as Import;
+            //Page view;
+            switch (windowTitle)
+            {
+                case "修改联系人":
+                    ConfigContactView contactView = window.Content as ConfigContactView;
+                    import.Contact = contactView.contactDataGrid.SelectedItem as Contact;
+                    import.ContactID = (contactView.contactDataGrid.SelectedItem as Contact).ID;
+                    break;
+                case "修改批次":
+                    InOutBatchConfigView batchView = window.Content as InOutBatchConfigView;
+                    import.Batch = batchView.batchDataGrid.SelectedItem as Batch;
+                    import.BatchID = (batchView.batchDataGrid.SelectedItem as Batch).ID;
+                    break;
+                case "修改储窖":
+                    ConfigPitView pitView = window.Content as ConfigPitView;
+                    import.Pit = pitView.pitDataGrid.SelectedItem as Pit;
+                    import.PitID = (pitView.pitDataGrid.SelectedItem as Pit).ID;
+                    break;
+                case "修改品种":
+                    ConfigKindView kindView = window.Content as ConfigKindView;
+                    import.Kind = kindView.kindDataGrid.SelectedItem as Kind;
+                    import.KindID = (kindView.kindDataGrid.SelectedItem as Kind).ID;
+                    break;
+            }
+            window.Close();
+        }
+        void modifyCancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Window.GetWindow(sender as Button).Close();
         }
     }
 }
