@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -19,22 +18,22 @@ using Storage.DataLogic;
 using Storage.Model;
 using Storage.ViewModel;
 
-namespace Storage.View
+namespace Storage.View.InOutView
 {
     /// <summary>
-    /// InOutImportView.xaml 的交互逻辑
+    /// InOutExport.xaml 的交互逻辑
     /// </summary>
-    public partial class InOutImportView : Page
+    public partial class InOutExportView : Page
     {
         private ModernDialog addWindow;
-        public InOutImportView()
+        public InOutExportView()
         {
             InitializeComponent();
-            ViewModel = new ImportViewModel();
-            this.importDataGrid.LoadingRow += importDataGrid_LoadingRow;
+            ViewModel = new ExportViewModel();
+            this.exportDataGrid.LoadingRow += exportDataGrid_LoadingRow;
         }
 
-        void importDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        void exportDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = e.Row.GetIndex() + 1;
             e.Row.MouseEnter += Row_MouseEnter;
@@ -43,19 +42,19 @@ namespace Storage.View
         void Row_MouseEnter(object sender, MouseEventArgs e)
         {
             DataGridRow row = e.Source as DataGridRow;
-            Import import = importDataGrid.Items[row.GetIndex()] as Import;
-            row.ToolTip = "联系人\n" + "姓名：\t" + import.Contact.Name + "\n身份证号：" + import.Contact.Identity + "\n电话：\t" +
-                import.Contact.Phone + "\n地址：\t" + import.Contact.Address + "\n备注：\t" + import.Contact.Note + "\n\n" +
-                "批次\n" + "名称：\t" + import.Batch.Name + "\n大小(吨):\t" + import.Batch.Size + "\n备注：\t" + import.Batch.Note + "\n\n" +
-                "储窖\n" + "名称：\t" + import.Pit.Name + "\n大小(吨):\t" + import.Pit.Size + "\n备注：\t" + import.Pit.Note + "\n\n" +
-                "品种\n" + "名称：\t" + import.Kind.Name + "\n备注：\t" + import.Kind.Note;
+            Export export = exportDataGrid.Items[row.GetIndex()] as Export;
+            row.ToolTip = "联系人\n" + "姓名：\t" + export.Contact.Name + "\n身份证号：" + export.Contact.Identity + "\n电话：\t" +
+                export.Contact.Phone + "\n地址：\t" + export.Contact.Address + "\n备注：\t" + export.Contact.Note + "\n\n" +
+                "批次\n" + "名称：\t" + export.Batch.Name + "\n大小(吨):\t" + export.Batch.Size + "\n备注：\t" + export.Batch.Note + "\n\n" +
+                "储窖\n" + "名称：\t" + export.Pit.Name + "\n大小(吨):\t" + export.Pit.Size + "\n备注：\t" + export.Pit.Note + "\n\n" +
+                "品种\n" + "名称：\t" + export.Kind.Name + "\n备注：\t" + export.Kind.Note;
 
         }
-        public ImportViewModel ViewModel
+        public ExportViewModel ViewModel
         {
             get
             {
-                return this.DataContext as ImportViewModel;
+                return this.DataContext as ExportViewModel;
             }
             set
             {
@@ -64,10 +63,10 @@ namespace Storage.View
         }
         private void addBtn_Click(object sender, RoutedEventArgs e)
         {
-            addWindow = getAddImportWindow();
+            addWindow = getAddExportWindow();
             addWindow.Show();
         }
-        ModernDialog getAddImportWindow()
+        ModernDialog getAddExportWindow()
         {
             Grid grid = new Grid();
             grid.Width = 300;
@@ -312,7 +311,7 @@ namespace Storage.View
             btns.Add(batchCancelBtn);
 
             InOutBatchConfigView view = new InOutBatchConfigView();
-            view.ViewModel = new BatchViewModel(InOutLogic.getImportBatch());
+            view.ViewModel = new BatchViewModel(InOutLogic.getExportBatch());
             view.addBtn.Visibility = Visibility.Hidden;
             view.delBtn.Visibility = Visibility.Hidden;
             view.modBtn.Visibility = Visibility.Hidden;
@@ -473,21 +472,21 @@ namespace Storage.View
         {
             try
             {
-                Import import = new Import();
+                Export export = new Export();
                 Grid content = addWindow.Content as Grid;
-                import.ContactID = Convert.ToInt32((content.Children[1] as TextBox).Tag);
-                import.BatchID = Convert.ToInt32((content.Children[3] as TextBox).Tag);
-                import.PitID = Convert.ToInt32((content.Children[5] as TextBox).Tag);
-                import.KindID = Convert.ToInt32((content.Children[7] as TextBox).Tag);
-                import.Size = Convert.ToDouble((content.Children[9] as TextBox).Text);
-                import.Note = Convert.ToString((content.Children[14] as TextBox).Text);
+                export.ContactID = Convert.ToInt32((content.Children[1] as TextBox).Tag);
+                export.BatchID = Convert.ToInt32((content.Children[3] as TextBox).Tag);
+                export.PitID = Convert.ToInt32((content.Children[5] as TextBox).Tag);
+                export.KindID = Convert.ToInt32((content.Children[7] as TextBox).Tag);
+                export.Size = Convert.ToDouble((content.Children[9] as TextBox).Text);
+                export.Note = Convert.ToString((content.Children[14] as TextBox).Text);
 
                 DatePicker datePicker = content.Children[11] as DatePicker;
                 DateTime time = datePicker.SelectedDate.Value;
                 time = time.AddHours(Convert.ToDouble(((content.Children[12] as StackPanel).Children[0] as ComboBox).Text));
                 time = time.AddMinutes(Convert.ToDouble(((content.Children[12] as StackPanel).Children[2] as ComboBox).Text));
-                import.Time = time;
-                this.ViewModel.ImportList.Add(import);
+                export.Time = time;
+                this.ViewModel.ExportList.Add(export);
             }
             catch
             {
@@ -499,22 +498,22 @@ namespace Storage.View
 
         private void delBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (importDataGrid.SelectedItems == null || importDataGrid.SelectedItems.Count == 0)
+            if (exportDataGrid.SelectedItems == null || exportDataGrid.SelectedItems.Count == 0)
             {
                 ModernDialog.ShowMessage("请先选择需要删除的入库记录！", "", MessageBoxButton.OK);
             }
             else
             {
-                ObservableCollection<Import> importList = new ObservableCollection<Import>();
-                foreach (Import import in importDataGrid.SelectedItems)
+                ObservableCollection<Export> exportList = new ObservableCollection<Export>();
+                foreach (Export export in exportDataGrid.SelectedItems)
                 {
-                    importList.Add(import);
+                    exportList.Add(export);
                 }
-                InOutImportView view = new InOutImportView();
+                InOutExportView view = new InOutExportView();
                 view.addBtn.Visibility = Visibility.Hidden;
                 view.modBtn.Visibility = Visibility.Hidden;
                 view.delBtn.Visibility = Visibility.Hidden;
-                view.ViewModel = new ImportViewModel(importList);
+                view.ViewModel = new ExportViewModel(exportList);
                 List<Button> btns = new List<Button>();
                 Button deleteSubmitBtn = new Button();
                 Button deleteCancelBtn = new Button();
@@ -538,10 +537,10 @@ namespace Storage.View
         {
             Button submitBtn = sender as Button;
             Window window = Window.GetWindow(submitBtn);
-            InOutImportView view = window.Content as InOutImportView;
-            for (int i = 0; i < view.ViewModel.ImportList.Count; i++)
+            InOutExportView view = window.Content as InOutExportView;
+            for (int i = 0; i < view.ViewModel.ExportList.Count; i++)
             {
-                this.ViewModel.ImportList.Remove(view.ViewModel.ImportList[i]);
+                this.ViewModel.ExportList.Remove(view.ViewModel.ExportList[i]);
             }
             window.Close();
         }
@@ -557,21 +556,21 @@ namespace Storage.View
             if (this.modBtn.Content.Equals("修改"))
             {
                 this.modBtn.Content = "修改中";
-                this.importDataGrid.IsReadOnly = false;
-                this.importDataGrid.PreparingCellForEdit += importDataGrid_PreparingCellForEdit;
+                this.exportDataGrid.IsReadOnly = false;
+                this.exportDataGrid.PreparingCellForEdit += exportDataGrid_PreparingCellForEdit;
                 this.modBtn.Background = Brushes.BlueViolet;
             }
             else
             {
                 this.modBtn.Content = "修改";
-                this.importDataGrid.IsReadOnly = true;
+                this.exportDataGrid.IsReadOnly = true;
                 this.modBtn.Background = null;
-                this.importDataGrid.PreparingCellForEdit -= importDataGrid_PreparingCellForEdit;
-                ViewModel.ImportUpd();
+                this.exportDataGrid.PreparingCellForEdit -= exportDataGrid_PreparingCellForEdit;
+                ViewModel.ExportUpd();
             }
         }
 
-        void importDataGrid_PreparingCellForEdit(object sender, DataGridPreparingCellForEditEventArgs e)
+        void exportDataGrid_PreparingCellForEdit(object sender, DataGridPreparingCellForEditEventArgs e)
         {
             Page view;
             string windowTitle="";
@@ -587,7 +586,7 @@ namespace Storage.View
                     break;
                 case 1:
                     InOutBatchConfigView batchView = new InOutBatchConfigView();
-                    batchView.ViewModel = new BatchViewModel(InOutLogic.getImportBatch());
+                    batchView.ViewModel = new BatchViewModel(InOutLogic.getExportBatch());
                     batchView.addBtn.Visibility = Visibility.Hidden;
                     batchView.modBtn.Visibility = Visibility.Hidden;
                     batchView.delBtn.Visibility = Visibility.Hidden;
@@ -633,8 +632,8 @@ namespace Storage.View
                     Buttons = btns,
                 };
                 diglog.Show();
-                importDataGrid.IsReadOnly = true;
-                importDataGrid.IsReadOnly = false;
+                exportDataGrid.IsReadOnly = true;
+                exportDataGrid.IsReadOnly = false;
             }
 
         }
@@ -643,29 +642,29 @@ namespace Storage.View
         {
             Window window = Window.GetWindow(sender as Button);
             string windowTitle = window.Title;
-            Import import = this.importDataGrid.SelectedItem as Import;
+            Export export = this.exportDataGrid.SelectedItem as Export;
             //Page view;
             switch (windowTitle)
             {
                 case "修改联系人":
                     ConfigContactView contactView = window.Content as ConfigContactView;
-                    import.Contact = contactView.contactDataGrid.SelectedItem as Contact;
-                    import.ContactID = (contactView.contactDataGrid.SelectedItem as Contact).ID;
+                    export.Contact = contactView.contactDataGrid.SelectedItem as Contact;
+                    export.ContactID = (contactView.contactDataGrid.SelectedItem as Contact).ID;
                     break;
                 case "修改批次":
                     InOutBatchConfigView batchView = window.Content as InOutBatchConfigView;
-                    import.Batch = batchView.batchDataGrid.SelectedItem as Batch;
-                    import.BatchID = (batchView.batchDataGrid.SelectedItem as Batch).ID;
+                    export.Batch = batchView.batchDataGrid.SelectedItem as Batch;
+                    export.BatchID = (batchView.batchDataGrid.SelectedItem as Batch).ID;
                     break;
                 case "修改储窖":
                     ConfigPitView pitView = window.Content as ConfigPitView;
-                    import.Pit = pitView.pitDataGrid.SelectedItem as Pit;
-                    import.PitID = (pitView.pitDataGrid.SelectedItem as Pit).ID;
+                    export.Pit = pitView.pitDataGrid.SelectedItem as Pit;
+                    export.PitID = (pitView.pitDataGrid.SelectedItem as Pit).ID;
                     break;
                 case "修改品种":
                     ConfigKindView kindView = window.Content as ConfigKindView;
-                    import.Kind = kindView.kindDataGrid.SelectedItem as Kind;
-                    import.KindID = (kindView.kindDataGrid.SelectedItem as Kind).ID;
+                    export.Kind = kindView.kindDataGrid.SelectedItem as Kind;
+                    export.KindID = (kindView.kindDataGrid.SelectedItem as Kind).ID;
                     break;
             }
             window.Close();

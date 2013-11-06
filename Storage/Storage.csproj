@@ -74,6 +74,7 @@
     </Compile>
     <Compile Include="ViewModel\BatchViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />
+    <Compile Include="ViewModel\ExportViewModel.cs" />
     <Compile Include="ViewModel\ImportViewModel.cs" />
     <Compile Include="ViewModel\KindViewModel.cs" />
     <Compile Include="ViewModel\PitViewModel.cs" />
@@ -88,6 +89,9 @@
     </Compile>
     <Compile Include="View\InOutView\InOutBatchConfigView.xaml.cs">
       <DependentUpon>InOutBatchConfigView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\InOutView\InOutExportView.xaml.cs">
+      <DependentUpon>InOutExportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\InOutView\InOutImportView.xaml.cs">
       <DependentUpon>InOutImportView.xaml</DependentUpon>
@@ -117,6 +121,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\InOutView\InOutBatchConfigView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\InOutView\InOutExportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

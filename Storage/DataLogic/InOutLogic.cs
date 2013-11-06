@@ -34,6 +34,16 @@ namespace Storage.DataLogic
             }
             return batchList;
         }
+        public static ObservableCollection<Batch> getExportBatch()
+        {
+            var result = from batch in storageDataContext.Batch where batch.InOut == false select batch;
+            ObservableCollection<Batch> batchList = new ObservableCollection<Batch>();
+            foreach (Batch batch in result)
+            {
+                batchList.Add(batch);
+            }
+            return batchList;
+        }
         public static void delBatch(Batch batch)
         {
         }
@@ -76,6 +86,37 @@ namespace Storage.DataLogic
             storageDataContext.SubmitChanges();
         }
         public static void updImport()
+        {
+            storageDataContext.SubmitChanges();
+        }
+        #endregion
+
+        #region Operation On Export
+        public static ObservableCollection<Export> getAllExport()
+        {
+            var result = from export in storageDataContext.Export select export;
+            ObservableCollection<Export> exportList = new ObservableCollection<Export>();
+            foreach (Export export in result)
+            {
+                exportList.Add(export);
+            }
+            return exportList;
+        }
+        public static void delExport(Export export)
+        {
+            storageDataContext.Export.DeleteOnSubmit(export);
+            storageDataContext.SubmitChanges();
+        }
+        public static void addExport(Export export)
+        {
+            export.Contact = storageDataContext.Contact.Single(contact => contact.ID == export.ContactID);
+            export.Batch = storageDataContext.Batch.Single(batch => batch.ID == export.BatchID);
+            export.Kind = storageDataContext.Kind.Single(kind => kind.ID == export.KindID);
+            export.Pit = storageDataContext.Pit.Single(pit => pit.ID == export.PitID);
+            storageDataContext.Export.InsertOnSubmit(export);
+            storageDataContext.SubmitChanges();
+        }
+        public static void updExport()
         {
             storageDataContext.SubmitChanges();
         }

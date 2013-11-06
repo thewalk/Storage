@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using FirstFloor.ModernUI.Windows.Controls;
 
 namespace Storage.Converter
 {
@@ -19,9 +20,18 @@ namespace Storage.Converter
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            string str = value as string;
-            DateTime time = DateTime.Parse(str);
-            return time;
+            DateTime time;
+            try
+            {
+                string str = value as string;
+                time = DateTime.Parse(str);
+                return time;
+            }
+            catch
+            {
+                ModernDialog.ShowMessage("时间格式错误，修改为当前时间！","",System.Windows.MessageBoxButton.OK);
+                return DateTime.Now;
+            }
         }
     }
 }

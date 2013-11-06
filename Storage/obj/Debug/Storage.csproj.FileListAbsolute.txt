@@ -46,3 +46,5 @@ C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\ConfigView\ConfigPi
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\InOutView\InOutBatchConfigView.g.cs
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\InOutView\InOutImportView.g.cs
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\InOutView\InOutBatchConfigView.baml
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\InOutView\InOutExportView.g.cs
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\InOutView\InOutExportView.baml

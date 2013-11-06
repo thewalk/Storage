@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace Storage.View
     /// </summary>
     public partial class InOutBatchConfigView : Page
     {
+        private ModernDialog addWindow;
         public InOutBatchConfigView()
         {
             InitializeComponent();
@@ -56,7 +58,7 @@ namespace Storage.View
         }
         private void addBtn_Click(object sender, RoutedEventArgs e)
         {
-            ModernDialog addWindow = getAddBatchWindow();
+            addWindow = getAddBatchWindow();
             addWindow.Show();
         }
         ModernDialog getAddBatchWindow()
@@ -113,15 +115,11 @@ namespace Storage.View
             noteBox.Width = 160;
             noteBox.MaxWidth = 160;
             noteBox.Margin = new Thickness(30, 0, 0, 20);
-            ComboBox contactBox = new ComboBox();
+            TextBox contactBox = new TextBox();
             contactBox.Width = 160;
             contactBox.MaxWidth = 160;
-            contactBox.Margin = new Thickness(30 ,0 ,0 ,20);
-            contactBox.SelectionChanged += contactBox_SelectionChanged;
-            foreach (Contact contact in ConfigLogic.getAllContact())
-            {
-                contactBox.Items.Add(contact.ID+":"+contact.Name);
-            }
+            contactBox.Margin = new Thickness(30, 0, 0, 20);
+            contactBox.GotFocus += contactBox_GotFocus;
 
             Button submitBtn = new Button();
             submitBtn.Content = "确认";
@@ -174,13 +172,59 @@ namespace Storage.View
             return wnd;
         }
 
-        void contactBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        #region contactBox get focus
+        void contactBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            ComboBox contactBox = e.Source as ComboBox;
-            string text = contactBox.SelectedItem.ToString();
-            Contact contact = ConfigLogic.getContactByID(Convert.ToInt32(text.Substring(0, text.IndexOf(':'))));
-            contactBox.ToolTip = "姓名：\t" + contact.Name + "\n身份证号：" + contact.Identity + "\n电话：\t" + contact.Phone + "\n地址：\t" + contact.Address + "\n备注：\t" + contact.Note;
+            List<Button> btns = new List<Button>();
+            Button contactSubmitBtn = new Button();
+            contactSubmitBtn.Content = "确定";
+            contactSubmitBtn.Click += contactSubmitBtn_Click;
+            Button contactCancelBtn = new Button();
+            contactCancelBtn.Content = "取消";
+            contactCancelBtn.Click += contactCancelBtn_Click;
+            btns.Add(contactSubmitBtn);
+            btns.Add(contactCancelBtn);
+
+            ConfigContactView view = new ConfigContactView();
+            view.addBtn.Visibility = Visibility.Hidden;
+            view.delBtn.Visibility = Visibility.Hidden;
+            view.modBtn.Visibility = Visibility.Hidden;
+
+            ModernDialog dialog = new ModernDialog()
+            {
+                Title = "选择联系人",
+                Content = view,
+                Buttons = btns,
+            };
+            dialog.Show();
         }
+        void contactSubmitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Button contactSubmitBtn = sender as Button;
+            Window window = Window.GetWindow(contactSubmitBtn);
+            ConfigContactView contactView = window.Content as ConfigContactView;
+            Contact contact = contactView.contactDataGrid.SelectedItem as Contact;
+
+            if (contact == null)
+            {
+                ModernDialog.ShowMessage("请选择联系人！", "", MessageBoxButton.OK);
+                return;
+            }
+            Grid grid = addWindow.Content as Grid;
+            (grid.Children[7] as TextBox).Text = contact.Name;
+            (grid.Children[7] as TextBox).Tag = contact.ID;
+            addWindow.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            window.Close();
+        }
+        void contactCancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Button contactCancelBtn = sender as Button;
+            Window window = Window.GetWindow(contactCancelBtn);
+            addWindow.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            window.Close();
+        }
+        #endregion
+
         void cancelBtn_Click(object sender, RoutedEventArgs e)
         {
             Button cancelBtn = sender as Button;
@@ -214,9 +258,9 @@ namespace Storage.View
                 }
                 if (i == 7)
                 {
-                    ComboBox contactBox = grid.Children[7] as ComboBox;
-                    string text = contactBox.Text; 
-                    info.Add(text.Substring(0,text.IndexOf(':')));
+                    TextBox contactBox = grid.Children[7] as TextBox;
+                    string text = contactBox.Tag.ToString(); 
+                    info.Add(text);
                     continue;
                 }
                 if (i % 2 == 1)
@@ -251,23 +295,51 @@ namespace Storage.View
             }
             else
             {
-                string msg = "";
-                msg += "确定删除以下储窖？\n删除批次后，相关联的出入库记录也将被删除！\n";
-                List<Batch> batchList = new List<Batch>();
-                foreach (Batch batch in batchDataGrid.SelectedItems)
+                ObservableCollection<Batch> batchList = new ObservableCollection<Batch>();
+                foreach(Batch batch in batchDataGrid.SelectedItems)
                 {
                     batchList.Add(batch);
-                    msg += "\t" + batch.Name;
                 }
-                if (ModernDialog.ShowMessage(msg, "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                InOutBatchConfigView view = new InOutBatchConfigView();
+                view.addBtn.Visibility = Visibility.Hidden;
+                view.modBtn.Visibility = Visibility.Hidden;
+                view.delBtn.Visibility = Visibility.Hidden;
+                view.ViewModel = new BatchViewModel(batchList);
+                List<Button> btns = new List<Button>();
+                Button deleteSubmitBtn = new Button();
+                Button deleteCancelBtn = new Button();
+                btns.Add(deleteSubmitBtn);
+                btns.Add(deleteCancelBtn);
+                deleteSubmitBtn.Content = "确定";
+                deleteCancelBtn.Content = "取消";
+                deleteCancelBtn.Click += deleteCancelBtn_Click;
+                deleteSubmitBtn.Click += deleteSubmitBtn_Click;
+                ModernDialog dialog = new ModernDialog()
                 {
-                    for (int i = 0; i < batchList.Count; i++)
-                    {
-                        this.ViewModel.BatchList.Remove(batchList[i]);
-                    }
-                }
-
+                    Content = view,
+                    Title = "确定删除以下批次？",
+                    Buttons = btns,
+                };
+                dialog.Show();
             }
+        }
+        void deleteSubmitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Button submitBtn = sender as Button;
+            Window window = Window.GetWindow(submitBtn);
+            InOutBatchConfigView view = window.Content as InOutBatchConfigView;
+            for (int i = 0; i < view.ViewModel.BatchList.Count; i++)
+            {
+                this.ViewModel.BatchList.Remove(view.ViewModel.BatchList[i]);
+            }
+            window.Close();
+        }
+
+        void deleteCancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Button cancelBtn = sender as Button;
+            Window window = Window.GetWindow(cancelBtn);
+            window.Close();
         }
         private void modBtn_Click(object sender, RoutedEventArgs e)
         {
