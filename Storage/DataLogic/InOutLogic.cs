@@ -57,6 +57,30 @@ namespace Storage.DataLogic
         {
             storageDataContext.SubmitChanges();
         }
+        public static ObservableCollection<Batch> getImportBatchByContactID(int contactID)
+        {
+            var result = from batch in storageDataContext.Batch 
+                         where batch.ContactID == contactID && batch.InOut == true 
+                         select batch;
+            ObservableCollection<Batch> batchList = new ObservableCollection<Batch>();
+            foreach (Batch batch in result)
+            {
+                batchList.Add(batch);
+            }
+            return batchList;
+        }
+        public static ObservableCollection<Batch> getExportBatchByContactID(int contactID)
+        {
+            var result = from batch in storageDataContext.Batch
+                         where batch.ContactID == contactID && batch.InOut == false
+                         select batch;
+            ObservableCollection<Batch> batchList = new ObservableCollection<Batch>();
+            foreach (Batch batch in result)
+            {
+                batchList.Add(batch);
+            }
+            return batchList;
+        }
         #endregion
 
 
@@ -73,6 +97,12 @@ namespace Storage.DataLogic
         }
         public static void delImport(Import import)
         {
+            if (import.Size.Value < getCurrentPortSize(import.ContactID.Value, import.PitID.Value, import.KindID.Value))
+            {
+                Exception e = new Exception();
+                e.Source = "储窖中没有足够储量，该入库记录不可删除！";
+                throw e;
+            }
             storageDataContext.Import.DeleteOnSubmit(import);
             storageDataContext.SubmitChanges();
         }
@@ -84,6 +114,25 @@ namespace Storage.DataLogic
             import.Pit = storageDataContext.Pit.Single(pit => pit.ID == import.PitID);
             storageDataContext.Import.InsertOnSubmit(import);
             storageDataContext.SubmitChanges();
+
+            CurrentPort currentPort = storageDataContext.CurrentPort.SingleOrDefault(
+                c => c.ContactID == import.ContactID && c.PitID == import.PitID && c.KindID == import.KindID);
+            if (currentPort == null)
+            {
+                currentPort = new CurrentPort();
+                currentPort.Contact = import.Contact;
+                currentPort.Pit = import.Pit;
+                currentPort.Kind = import.Kind;
+                currentPort.Size = import.Size;
+                storageDataContext.CurrentPort.InsertOnSubmit(currentPort);
+            }
+            else
+            {
+                currentPort.Size += import.Size;
+                storageDataContext.CurrentPort.InsertOnSubmit(currentPort);
+            }
+            storageDataContext.SubmitChanges();
+
         }
         public static void updImport()
         {
@@ -119,6 +168,38 @@ namespace Storage.DataLogic
         public static void updExport()
         {
             storageDataContext.SubmitChanges();
+        }
+        #endregion
+
+        #region Operation On CurrentPort
+        public static ObservableCollection<Pit> getPitByContactID(int contactID)
+        {
+            var result = (from currentPort in storageDataContext.CurrentPort
+                          where currentPort.ContactID == contactID
+                          select currentPort).Distinct();
+            ObservableCollection<Pit> pitList = new ObservableCollection<Pit>();
+            foreach(CurrentPort currentPort  in result)
+            {
+                pitList.Add(currentPort.Pit);
+            }
+            return pitList;
+        }
+        public static ObservableCollection<Kind> getKindByContactAndPit(int contactID, int pitID)
+        {
+            var result = (from currentPort in storageDataContext.CurrentPort
+                          where currentPort.ContactID == contactID && currentPort.PitID == pitID
+                          select currentPort).Distinct();
+            ObservableCollection<Kind> kindList = new ObservableCollection<Kind>();
+            foreach (CurrentPort currentPort in result)
+            {
+                kindList.Add(currentPort.Kind);
+            }
+            return kindList;
+        }
+        public static double getCurrentPortSize(int contactID, int pitID, int kindID)
+        {
+            CurrentPort currentPort = storageDataContext.CurrentPort.SingleOrDefault(c => c.ContactID == contactID && c.PitID == pitID && c.KindID == kindID);
+            return currentPort.Size.Value;
         }
         #endregion
     }

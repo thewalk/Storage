@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -159,23 +160,50 @@ namespace Storage.View
             }
             else
             {
-                string msg = "";
-                msg += "确定删除以下品种？\n";
-                List<Kind> kindList = new List<Kind>();
-                foreach (Kind kind in kindDataGrid.SelectedItems)
+                ObservableCollection<Kind> kindList = new ObservableCollection<Kind>();
+                foreach(Kind kind in kindDataGrid.SelectedItems)
                 {
                     kindList.Add(kind);
-                    msg += "\t" + kind.Name + "\n";
                 }
-                if (ModernDialog.ShowMessage(msg, "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                ConfigKindView view = new ConfigKindView();
+                view.ViewModel = new KindViewModel(kindList);
+                view.addBtn.Visibility = Visibility.Hidden;
+                view.delBtn.Visibility = Visibility.Hidden;
+                view.modBtn.Visibility = Visibility.Hidden;
+                List<Button> btns = new List<Button>();
+                Button delSubmitBtn = new Button();
+                Button delCancelBtn = new Button();
+                delSubmitBtn.Content = "确定";
+                delCancelBtn.Content = "取消";
+                delSubmitBtn.Click += delSubmitBtn_Click;
+                delCancelBtn.Click += delCancelBtn_Click;
+                btns.Add(delSubmitBtn);
+                btns.Add(delCancelBtn);
+                ModernDialog dialog = new ModernDialog()
                 {
-                    for (int i = 0; i < kindList.Count; i++)
-                    {
-                        this.ViewModel.KindList.Remove(kindList[i]);
-                    }
-                }
-
+                    Title = "确定删除以下品种？",
+                    Content = view,
+                    Buttons = btns,
+                };
+                dialog.Show();
             }
+        }
+
+
+        void delSubmitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Window window = Window.GetWindow(sender as Button);
+            ConfigKindView view = window.Content as ConfigKindView;
+            foreach (Kind kind in view.kindDataGrid.Items)
+            {
+                this.ViewModel.KindList.Remove(kind);
+            }
+            window.Close();
+        }
+
+        void delCancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Window.GetWindow(sender as Button).Close();
         }
 
         private void modBtn_Click(object sender, RoutedEventArgs e)

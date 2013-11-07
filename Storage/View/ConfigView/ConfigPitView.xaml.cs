@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -179,23 +180,50 @@ namespace Storage.View
             }
             else
             {
-                string msg = "";
-                msg += "确定删除以下储窖？\n";
-                List<Pit> pitList = new List<Pit>();
+                ObservableCollection<Pit> pitList = new ObservableCollection<Pit>();
                 foreach (Pit pit in pitDataGrid.SelectedItems)
                 {
                     pitList.Add(pit);
-                    msg += "\t" + pit.Name;
                 }
-                if (ModernDialog.ShowMessage(msg, "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                {
-                    for (int i = 0; i < pitList.Count; i++)
-                    {
-                        this.ViewModel.PitList.Remove(pitList[i]);
-                    }
-                }
+                ConfigPitView view = new ConfigPitView();
+                view.addBtn.Visibility = Visibility.Hidden;
+                view.delBtn.Visibility = Visibility.Hidden;
+                view.modBtn.Visibility = Visibility.Hidden;
+                view.ViewModel = new PitViewModel(pitList);
+                List<Button> btns = new List<Button>();
+                Button delSubmitBtn = new Button();
+                Button delCancelBtn = new Button();
+                delSubmitBtn.Content = "确定";
+                delCancelBtn.Content = "取消";
+                delSubmitBtn.Click += delSubmitBtn_Click;
+                delCancelBtn.Click += delCancelBtn_Click;
+                btns.Add(delSubmitBtn);
+                btns.Add(delCancelBtn);
 
+                ModernDialog dialog = new ModernDialog()
+                {
+                    Title = "确定删除以下储窖？",
+                    Content = view,
+                    Buttons = btns
+                };
+                dialog.Show();
             }
+        }
+
+        private void delSubmitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Window window = Window.GetWindow(sender as Button);
+            ConfigPitView view = window.Content as ConfigPitView;
+            foreach (Pit pit in view.pitDataGrid.Items)
+            {
+                this.ViewModel.PitList.Remove(pit);
+            }
+            window.Close();
+        }
+
+        private void delCancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Window.GetWindow(sender as Button).Close();
         }
 
         private void modBtn_Click(object sender, RoutedEventArgs e)

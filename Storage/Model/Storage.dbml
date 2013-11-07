@@ -8,7 +8,6 @@
       <Column Name="InOut" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Note" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="ContactID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="Batch_CurrentPort" Member="CurrentPort" ThisKey="ID" OtherKey="BatchID" Type="CurrentPort" />
       <Association Name="Batch_Export" Member="Export" ThisKey="ID" OtherKey="BatchID" Type="Export" />
       <Association Name="Batch_Import" Member="Import" ThisKey="ID" OtherKey="BatchID" Type="Import" />
       <Association Name="Contact_Batch" Member="Contact" ThisKey="ContactID" OtherKey="ID" Type="Contact" IsForeignKey="true" />
@@ -43,11 +42,9 @@
     <Type Name="CurrentPort">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="ContactID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="BatchID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="PitID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="KindID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Size" Type="System.Double" DbType="Float" CanBeNull="true" />
-      <Association Name="Batch_CurrentPort" Member="Batch" ThisKey="BatchID" OtherKey="ID" Type="Batch" IsForeignKey="true" />
       <Association Name="Contact_CurrentPort" Member="Contact" ThisKey="ContactID" OtherKey="ID" Type="Contact" IsForeignKey="true" />
       <Association Name="Pit_CurrentPort" Member="Pit" ThisKey="PitID" OtherKey="ID" Type="Pit" IsForeignKey="true" />
       <Association Name="Kind_CurrentPort" Member="Kind" ThisKey="KindID" OtherKey="ID" Type="Kind" IsForeignKey="true" />

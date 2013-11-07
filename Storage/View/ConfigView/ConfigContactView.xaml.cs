@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -206,29 +207,57 @@ namespace Storage.View
 
         private void delBtn_Click(object sender, RoutedEventArgs e)
         {
+
             if (contactDataGrid.SelectedItems == null || contactDataGrid.SelectedItems.Count == 0)
             {
                 ModernDialog.ShowMessage("请先选择需要删除的联系人！", "", MessageBoxButton.OK);
             }
             else
             {
-                string msg = "";
-                msg += "确定删除以下联系人？\n";
-                List<Contact> contactList = new List<Contact>();
+                ObservableCollection<Contact> contactList = new ObservableCollection<Contact>();
                 foreach (Contact contact in contactDataGrid.SelectedItems)
                 {
                     contactList.Add(contact);
-                    msg += "\t" + contact.Name +"\n";
                 }
-                if (ModernDialog.ShowMessage(msg, "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                {
-                    for (int i = 0; i < contactList.Count; i++)
-                    {
-                        this.ViewModel.ContactList.Remove(contactList[i]);
-                    }
-                }
+                ConfigContactView view = new ConfigContactView();
+                view.addBtn.Visibility = Visibility.Hidden;
+                view.delBtn.Visibility = Visibility.Hidden;
+                view.modBtn.Visibility = Visibility.Hidden;
+                view.ViewModel = new ContactViewModel(contactList);
+                List<Button> btns = new List<Button>();
+                Button delSubmitBtn = new Button();
+                Button delCancelBtn = new Button();
+                delSubmitBtn.Content = "确定";
+                delCancelBtn.Content = "取消";
+                delSubmitBtn.Click += delSubmitBtn_Click;
+                delCancelBtn.Click += delCancelBtn_Click;
+                btns.Add(delSubmitBtn);
+                btns.Add(delCancelBtn);
 
+                ModernDialog dialog = new ModernDialog()
+                {
+                    Title = "确定删除以下联系人？",
+                    Content = view,
+                    Buttons = btns
+                };
+                dialog.Show();
             }
+        }
+
+        void delSubmitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Window window = Window.GetWindow(sender as Button);
+            ConfigContactView view = window.Content as ConfigContactView;
+            foreach (Contact contact in view.contactDataGrid.Items)
+            {
+                this.ViewModel.ContactList.Remove(contact);
+            }
+            window.Close();
+        }
+
+        void delCancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Window.GetWindow(sender as Button).Close();
         }
 
         private void modBtn_Click(object sender, RoutedEventArgs e)

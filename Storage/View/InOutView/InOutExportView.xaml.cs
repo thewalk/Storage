@@ -117,6 +117,7 @@ namespace Storage.View.InOutView
             contactBox.MaxWidth = 160;
             contactBox.Margin = new Thickness(30, 60, 0, 20);
             contactBox.GotFocus += contactBox_GotFocus;
+            contactBox.TextChanged += contactBox_TextChanged;
             TextBox batchBox = new TextBox();
             batchBox.Width = 160;
             batchBox.MaxWidth = 160;
@@ -127,6 +128,7 @@ namespace Storage.View.InOutView
             pitBox.MaxWidth = 160;
             pitBox.Margin = new Thickness(30, 0, 0, 20);
             pitBox.GotFocus += pitBox_GotFocus;
+            pitBox.TextChanged += pitBox_TextChanged;
             TextBox kindBox = new TextBox();
             kindBox.Width = 160;
             kindBox.MaxWidth = 160;
@@ -136,6 +138,7 @@ namespace Storage.View.InOutView
             sizeBox.Width = 160;
             sizeBox.MaxWidth = 160;
             sizeBox.Margin = new Thickness(30, 0, 0, 20);
+            sizeBox.GotFocus += sizeBox_GotFocus;
             DatePicker timeBox = new DatePicker();
             timeBox.Text = DateTime.Now.Date.ToString();
             timeBox.Width = 160;
@@ -243,6 +246,20 @@ namespace Storage.View.InOutView
             wnd.Width = 300;
             return wnd;
         }
+
+        void pitBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Grid content = addWindow.Content as Grid;
+            (content.Children[7] as TextBox).Clear();
+        }
+
+        void contactBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Grid content = addWindow.Content as Grid;
+            (content.Children[3] as TextBox).Clear();
+            (content.Children[5] as TextBox).Clear();
+            (content.Children[7] as TextBox).Clear();
+        }
      
         #region contactBox get focus
         void contactBox_GotFocus(object sender, RoutedEventArgs e)
@@ -310,8 +327,10 @@ namespace Storage.View.InOutView
             btns.Add(batchSubmitBtn);
             btns.Add(batchCancelBtn);
 
+            Grid content = addWindow.Content as Grid;
+            int contactID = Convert.ToInt32((content.Children[1] as TextBox).Tag);
             InOutBatchConfigView view = new InOutBatchConfigView();
-            view.ViewModel = new BatchViewModel(InOutLogic.getExportBatch());
+            view.ViewModel = new BatchViewModel(InOutLogic.getExportBatchByContactID(contactID));
             view.addBtn.Visibility = Visibility.Hidden;
             view.delBtn.Visibility = Visibility.Hidden;
             view.modBtn.Visibility = Visibility.Hidden;
@@ -366,7 +385,11 @@ namespace Storage.View.InOutView
             btns.Add(pitSubmitBtn);
             btns.Add(pitCancelBtn);
 
+            Grid content = addWindow.Content as Grid;
+            int contactID = Convert.ToInt32((content.Children[1] as TextBox).Tag);
+            int batchID = Convert.ToInt32((content.Children[3] as TextBox).Tag);
             ConfigPitView view = new ConfigPitView();
+            view.ViewModel = new PitViewModel(InOutLogic.getPitByContactID(contactID));
             view.addBtn.Visibility = Visibility.Hidden;
             view.delBtn.Visibility = Visibility.Hidden;
             view.modBtn.Visibility = Visibility.Hidden;
@@ -420,7 +443,12 @@ namespace Storage.View.InOutView
             btns.Add(kindSubmitBtn);
             btns.Add(kindCancelBtn);
 
+            Grid content = addWindow.Content as Grid;
+            int contactID = Convert.ToInt32((content.Children[1] as TextBox).Tag);
+            int batchID = Convert.ToInt32((content.Children[3] as TextBox).Tag);
+            int pitID = Convert.ToInt32((content.Children[5] as TextBox).Tag);
             ConfigKindView view = new ConfigKindView();
+            view.ViewModel = new KindViewModel(InOutLogic.getKindByContactAndPit(contactID,pitID));
             view.addBtn.Visibility = Visibility.Hidden;
             view.delBtn.Visibility = Visibility.Hidden;
             view.modBtn.Visibility = Visibility.Hidden;
@@ -462,6 +490,28 @@ namespace Storage.View.InOutView
         #endregion
 
 
+        void sizeBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Export export = new Export();
+            Grid content = addWindow.Content as Grid;
+            if ((content.Children[1] as TextBox).Text.Equals("") || (content.Children[3] as TextBox).Text.Equals("") ||
+                    (content.Children[5] as TextBox).Text.Equals("") || (content.Children[7] as TextBox).Text.Equals(""))
+            {
+                (content.Children[9] as TextBox).Text = "缺少信息！";
+                addWindow.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
+            else
+            {
+                (content.Children[9] as TextBox).Text = "存货量:" + InOutLogic.getCurrentPortSize(
+                    Convert.ToInt32((content.Children[1] as TextBox).Tag),
+                    Convert.ToInt32((content.Children[5] as TextBox).Tag),
+                    Convert.ToInt32((content.Children[7] as TextBox).Tag)).ToString();
+                (content.Children[9] as TextBox).Tag = InOutLogic.getCurrentPortSize(
+                    Convert.ToInt32((content.Children[1] as TextBox).Tag),
+                    Convert.ToInt32((content.Children[5] as TextBox).Tag),
+                    Convert.ToInt32((content.Children[7] as TextBox).Tag));
+            }
+        }
 
         private void cancelBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -474,6 +524,17 @@ namespace Storage.View.InOutView
             {
                 Export export = new Export();
                 Grid content = addWindow.Content as Grid;
+                if ((content.Children[1] as TextBox).Text.Equals("") || (content.Children[3] as TextBox).Text.Equals("") ||
+                    (content.Children[5] as TextBox).Text.Equals("") || (content.Children[7] as TextBox).Text.Equals(""))
+                {
+                    ModernDialog.ShowMessage("请规范填写！", "", MessageBoxButton.OK);
+                    return;
+                }
+                if (Convert.ToDouble((content.Children[9] as TextBox).Text) > Convert.ToDouble((content.Children[9] as TextBox).Tag))
+                {
+                    ModernDialog.ShowMessage("出库量超出范围！", "", MessageBoxButton.OK);
+                    return;
+                }
                 export.ContactID = Convert.ToInt32((content.Children[1] as TextBox).Tag);
                 export.BatchID = Convert.ToInt32((content.Children[3] as TextBox).Tag);
                 export.PitID = Convert.ToInt32((content.Children[5] as TextBox).Tag);
@@ -557,6 +618,7 @@ namespace Storage.View.InOutView
             {
                 this.modBtn.Content = "修改中";
                 this.exportDataGrid.IsReadOnly = false;
+                this.exportDataGrid.Columns[4].IsReadOnly = true;
                 this.exportDataGrid.PreparingCellForEdit += exportDataGrid_PreparingCellForEdit;
                 this.modBtn.Background = Brushes.BlueViolet;
             }
@@ -574,6 +636,7 @@ namespace Storage.View.InOutView
         {
             Page view;
             string windowTitle="";
+            Export export = e.Row.Item as Export;
             switch (e.Column.DisplayIndex)
             {
                 case 0:
@@ -586,7 +649,7 @@ namespace Storage.View.InOutView
                     break;
                 case 1:
                     InOutBatchConfigView batchView = new InOutBatchConfigView();
-                    batchView.ViewModel = new BatchViewModel(InOutLogic.getExportBatch());
+                    batchView.ViewModel = new BatchViewModel(InOutLogic.getExportBatchByContactID(export.ContactID.Value));
                     batchView.addBtn.Visibility = Visibility.Hidden;
                     batchView.modBtn.Visibility = Visibility.Hidden;
                     batchView.delBtn.Visibility = Visibility.Hidden;
@@ -594,8 +657,8 @@ namespace Storage.View.InOutView
                     view = batchView as Page;
                     break;
                 case 2:
-                    
                     ConfigPitView pitView = new ConfigPitView();
+                    pitView.ViewModel = new PitViewModel(InOutLogic.getPitByContactID(export.ContactID.Value));
                     pitView.addBtn.Visibility = Visibility.Hidden;
                     pitView.modBtn.Visibility = Visibility.Hidden;
                     pitView.delBtn.Visibility = Visibility.Hidden;
@@ -604,6 +667,7 @@ namespace Storage.View.InOutView
                     break;
                 case 3:
                     ConfigKindView kindView = new ConfigKindView();
+                    kindView.ViewModel = new KindViewModel(InOutLogic.getKindByContactAndPit(export.ContactID.Value,export.PitID.Value));
                     kindView.addBtn.Visibility = Visibility.Hidden;
                     kindView.modBtn.Visibility = Visibility.Hidden;
                     kindView.delBtn.Visibility = Visibility.Hidden;

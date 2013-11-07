@@ -158,8 +158,6 @@ namespace Storage.Model
 		
 		private System.Nullable<int> _ContactID;
 		
-		private EntitySet<CurrentPort> _CurrentPort;
-		
 		private EntitySet<Export> _Export;
 		
 		private EntitySet<Import> _Import;
@@ -186,7 +184,6 @@ namespace Storage.Model
 		
 		public Batch()
 		{
-			this._CurrentPort = new EntitySet<CurrentPort>(new Action<CurrentPort>(this.attach_CurrentPort), new Action<CurrentPort>(this.detach_CurrentPort));
 			this._Export = new EntitySet<Export>(new Action<Export>(this.attach_Export), new Action<Export>(this.detach_Export));
 			this._Import = new EntitySet<Import>(new Action<Import>(this.attach_Import), new Action<Import>(this.detach_Import));
 			this._Contact = default(EntityRef<Contact>);
@@ -317,19 +314,6 @@ namespace Storage.Model
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Batch_CurrentPort", Storage="_CurrentPort", ThisKey="ID", OtherKey="BatchID")]
-		public EntitySet<CurrentPort> CurrentPort
-		{
-			get
-			{
-				return this._CurrentPort;
-			}
-			set
-			{
-				this._CurrentPort.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Batch_Export", Storage="_Export", ThisKey="ID", OtherKey="BatchID")]
 		public EntitySet<Export> Export
 		{
@@ -408,18 +392,6 @@ namespace Storage.Model
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_CurrentPort(CurrentPort entity)
-		{
-			this.SendPropertyChanging();
-			entity.Batch = this;
-		}
-		
-		private void detach_CurrentPort(CurrentPort entity)
-		{
-			this.SendPropertyChanging();
-			entity.Batch = null;
 		}
 		
 		private void attach_Export(Export entity)
@@ -969,15 +941,11 @@ namespace Storage.Model
 		
 		private System.Nullable<int> _ContactID;
 		
-		private System.Nullable<int> _BatchID;
-		
 		private System.Nullable<int> _PitID;
 		
 		private System.Nullable<int> _KindID;
 		
 		private System.Nullable<double> _Size;
-		
-		private EntityRef<Batch> _Batch;
 		
 		private EntityRef<Contact> _Contact;
 		
@@ -993,8 +961,6 @@ namespace Storage.Model
     partial void OnIDChanged();
     partial void OnContactIDChanging(System.Nullable<int> value);
     partial void OnContactIDChanged();
-    partial void OnBatchIDChanging(System.Nullable<int> value);
-    partial void OnBatchIDChanged();
     partial void OnPitIDChanging(System.Nullable<int> value);
     partial void OnPitIDChanged();
     partial void OnKindIDChanging(System.Nullable<int> value);
@@ -1005,7 +971,6 @@ namespace Storage.Model
 		
 		public CurrentPort()
 		{
-			this._Batch = default(EntityRef<Batch>);
 			this._Contact = default(EntityRef<Contact>);
 			this._Pit = default(EntityRef<Pit>);
 			this._Kind = default(EntityRef<Kind>);
@@ -1052,30 +1017,6 @@ namespace Storage.Model
 					this._ContactID = value;
 					this.SendPropertyChanged("ContactID");
 					this.OnContactIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BatchID", DbType="Int")]
-		public System.Nullable<int> BatchID
-		{
-			get
-			{
-				return this._BatchID;
-			}
-			set
-			{
-				if ((this._BatchID != value))
-				{
-					if (this._Batch.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnBatchIDChanging(value);
-					this.SendPropertyChanging();
-					this._BatchID = value;
-					this.SendPropertyChanged("BatchID");
-					this.OnBatchIDChanged();
 				}
 			}
 		}
@@ -1144,40 +1085,6 @@ namespace Storage.Model
 					this._Size = value;
 					this.SendPropertyChanged("Size");
 					this.OnSizeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Batch_CurrentPort", Storage="_Batch", ThisKey="BatchID", OtherKey="ID", IsForeignKey=true)]
-		public Batch Batch
-		{
-			get
-			{
-				return this._Batch.Entity;
-			}
-			set
-			{
-				Batch previousValue = this._Batch.Entity;
-				if (((previousValue != value) 
-							|| (this._Batch.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Batch.Entity = null;
-						previousValue.CurrentPort.Remove(this);
-					}
-					this._Batch.Entity = value;
-					if ((value != null))
-					{
-						value.CurrentPort.Add(this);
-						this._BatchID = value.ID;
-					}
-					else
-					{
-						this._BatchID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("Batch");
 				}
 			}
 		}

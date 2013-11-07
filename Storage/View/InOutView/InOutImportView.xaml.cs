@@ -118,6 +118,7 @@ namespace Storage.View
             contactBox.MaxWidth = 160;
             contactBox.Margin = new Thickness(30, 60, 0, 20);
             contactBox.GotFocus += contactBox_GotFocus;
+            contactBox.TextChanged += contactBox_TextChanged;
             TextBox batchBox = new TextBox();
             batchBox.Width = 160;
             batchBox.MaxWidth = 160;
@@ -244,6 +245,12 @@ namespace Storage.View
             wnd.Width = 300;
             return wnd;
         }
+
+        void contactBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Grid content = addWindow.Content as Grid;
+            (content.Children[3] as TextBox).Clear();
+        }
      
         #region contactBox get focus
         void contactBox_GotFocus(object sender, RoutedEventArgs e)
@@ -311,8 +318,10 @@ namespace Storage.View
             btns.Add(batchSubmitBtn);
             btns.Add(batchCancelBtn);
 
+            Grid content = addWindow.Content as Grid;
+            int contactID = Convert.ToInt32((content.Children[1] as TextBox).Tag);
             InOutBatchConfigView view = new InOutBatchConfigView();
-            view.ViewModel = new BatchViewModel(InOutLogic.getImportBatch());
+            view.ViewModel = new BatchViewModel(InOutLogic.getImportBatchByContactID(contactID));
             view.addBtn.Visibility = Visibility.Hidden;
             view.delBtn.Visibility = Visibility.Hidden;
             view.modBtn.Visibility = Visibility.Hidden;
@@ -475,6 +484,12 @@ namespace Storage.View
             {
                 Import import = new Import();
                 Grid content = addWindow.Content as Grid;
+                if ((content.Children[1] as TextBox).Text.Equals("") || (content.Children[3] as TextBox).Text.Equals("") ||
+                    (content.Children[5] as TextBox).Text.Equals("") || (content.Children[7] as TextBox).Text.Equals(""))
+                {
+                    ModernDialog.ShowMessage("请规范填写！", "", MessageBoxButton.OK);
+                    return;
+                }
                 import.ContactID = Convert.ToInt32((content.Children[1] as TextBox).Tag);
                 import.BatchID = Convert.ToInt32((content.Children[3] as TextBox).Tag);
                 import.PitID = Convert.ToInt32((content.Children[5] as TextBox).Tag);
@@ -558,6 +573,7 @@ namespace Storage.View
             {
                 this.modBtn.Content = "修改中";
                 this.importDataGrid.IsReadOnly = false;
+                this.importDataGrid.Columns[4].IsReadOnly = true;
                 this.importDataGrid.PreparingCellForEdit += importDataGrid_PreparingCellForEdit;
                 this.modBtn.Background = Brushes.BlueViolet;
             }
@@ -575,6 +591,7 @@ namespace Storage.View
         {
             Page view;
             string windowTitle="";
+            Import import = e.Row.Item as Import;
             switch (e.Column.DisplayIndex)
             {
                 case 0:
@@ -587,7 +604,7 @@ namespace Storage.View
                     break;
                 case 1:
                     InOutBatchConfigView batchView = new InOutBatchConfigView();
-                    batchView.ViewModel = new BatchViewModel(InOutLogic.getImportBatch());
+                    batchView.ViewModel = new BatchViewModel(InOutLogic.getImportBatchByContactID(import.ContactID.Value));
                     batchView.addBtn.Visibility = Visibility.Hidden;
                     batchView.modBtn.Visibility = Visibility.Hidden;
                     batchView.delBtn.Visibility = Visibility.Hidden;
