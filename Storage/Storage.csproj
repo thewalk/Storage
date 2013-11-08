@@ -67,6 +67,7 @@
     <Compile Include="DataLogic\ConfigLogic.cs" />
     <Compile Include="DataLogic\MyDataContext.cs" />
     <Compile Include="DataLogic\InOutLogic.cs" />
+    <Compile Include="DataLogic\SearchLogic.cs" />
     <Compile Include="Model\Storage.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -95,6 +96,9 @@
     </Compile>
     <Compile Include="View\InOutView\InOutImportView.xaml.cs">
       <DependentUpon>InOutImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SearchView\SearchQuickView.xaml.cs">
+      <DependentUpon>SearchQuickView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -129,6 +133,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\InOutView\InOutImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SearchView\SearchQuickView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -172,9 +180,7 @@
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="View\SearchView\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

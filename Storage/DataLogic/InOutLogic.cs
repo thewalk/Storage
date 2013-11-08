@@ -96,13 +96,17 @@ namespace Storage.DataLogic
             return importList;
         }
         public static void delImport(Import import)
-        {
-            if (import.Size.Value < getCurrentPortSize(import.ContactID.Value, import.PitID.Value, import.KindID.Value))
+        {         
+            if (import.Size.Value > getCurrentPortSize(import.ContactID.Value, import.PitID.Value, import.KindID.Value))
             {
                 Exception e = new Exception();
                 e.Source = "储窖中没有足够储量，该入库记录不可删除！";
                 throw e;
             }
+            CurrentPort currentPort = storageDataContext.CurrentPort.Single(
+                c => c.ContactID == import.ContactID && c.KindID == import.KindID && c.PitID == import.PitID);
+            currentPort.Size -= import.Size;
+
             storageDataContext.Import.DeleteOnSubmit(import);
             storageDataContext.SubmitChanges();
         }
@@ -153,11 +157,25 @@ namespace Storage.DataLogic
         }
         public static void delExport(Export export)
         {
+            CurrentPort currentPort = storageDataContext.CurrentPort.SingleOrDefault(
+                c => c.ContactID == export.ContactID && c.PitID == export.PitID && c.KindID == export.KindID);
+            currentPort.Size += export.Size;
+
             storageDataContext.Export.DeleteOnSubmit(export);
             storageDataContext.SubmitChanges();
         }
         public static void addExport(Export export)
         {
+            if (export.Size.Value > getCurrentPortSize(export.ContactID.Value, export.PitID.Value, export.KindID.Value))
+            {
+                Exception e = new Exception();
+                e.Source = "储窖中没有足够储量，该入库记录不可删除！";
+                throw e;
+            }
+            CurrentPort currentPort = storageDataContext.CurrentPort.Single(
+                c => c.ContactID == export.ContactID && c.KindID == export.KindID && c.PitID == export.PitID);
+            currentPort.Size -= export.Size;
+
             export.Contact = storageDataContext.Contact.Single(contact => contact.ID == export.ContactID);
             export.Batch = storageDataContext.Batch.Single(batch => batch.ID == export.BatchID);
             export.Kind = storageDataContext.Kind.Single(kind => kind.ID == export.KindID);

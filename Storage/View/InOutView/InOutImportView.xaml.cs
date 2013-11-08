@@ -554,6 +554,17 @@ namespace Storage.View
             Button submitBtn = sender as Button;
             Window window = Window.GetWindow(submitBtn);
             InOutImportView view = window.Content as InOutImportView;
+
+            for (int i = 0; i < view.ViewModel.ImportList.Count; i++)
+            {
+                Import import = view.ViewModel.ImportList[i];
+                if (import.Size.Value > InOutLogic.getCurrentPortSize(import.ContactID.Value, import.PitID.Value, import.KindID.Value))
+                {
+                    ModernDialog.ShowMessage("储窖中没有足够储量，该入库记录不可删除！", "", MessageBoxButton.OK);
+                    return;
+                }
+            }
+
             for (int i = 0; i < view.ViewModel.ImportList.Count; i++)
             {
                 this.ViewModel.ImportList.Remove(view.ViewModel.ImportList[i]);

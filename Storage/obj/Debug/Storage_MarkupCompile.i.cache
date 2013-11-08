@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\GJY\Documents\GitHub\Storage\Storage\App.xaml
-7-623367616
+8-2095121805
 
-27-2063916067
+291126846630
 161140112979
-MainWindow.xaml;View\ConfigView\ConfigContactView.xaml;View\ConfigView\ConfigKindView.xaml;View\ConfigView\ConfigPitView.xaml;View\InOutView\InOutBatchConfigView.xaml;View\InOutView\InOutExportView.xaml;View\InOutView\InOutImportView.xaml;
+MainWindow.xaml;View\ConfigView\ConfigContactView.xaml;View\ConfigView\ConfigKindView.xaml;View\ConfigView\ConfigPitView.xaml;View\InOutView\InOutBatchConfigView.xaml;View\InOutView\InOutExportView.xaml;View\InOutView\InOutImportView.xaml;View\SearchView\SearchQuickView.xaml;
 
 False
 

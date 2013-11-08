@@ -48,3 +48,5 @@ C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\InOutView\InOutImpo
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\InOutView\InOutBatchConfigView.baml
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\InOutView\InOutExportView.g.cs
 C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\InOutView\InOutExportView.baml
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\SearchView\SearchQuickView.baml
+C:\Users\GJY\Documents\GitHub\Storage\Storage\obj\Debug\View\SearchView\SearchQuickView.g.cs

@@ -6,7 +6,7 @@
     <mui:ModernWindow.MenuLinkGroups>
         <mui:LinkGroup x:Uid="mui:LinkGroup_1" DisplayName="信息查询" >
             <mui:LinkGroup.Links>
-                <mui:Link x:Uid="mui:Link_1" DisplayName="link 1" />
+                <mui:Link x:Uid="mui:Link_1" DisplayName="快速查找" Source="/View/SearchView/SearchQuickView.xaml" />
                 <mui:Link x:Uid="mui:Link_2" DisplayName="link 2" />
                 <mui:Link x:Uid="mui:Link_3" DisplayName="link 3" />
             </mui:LinkGroup.Links>
